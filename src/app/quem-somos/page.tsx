@@ -22,8 +22,16 @@ const QuemSomos: React.FC = () => {
         Quem Somos
       </motion.h1>
       <p className="text-lg mb-8 text-gray-700">
-      O GESDI (Grupo de Estudos e Pesquisa, Gêneros, Sexualidades e Diferenças nos Vários EspaçosTempos da História e dos Cotidianos), é um grupo de pesquisa dedicado à combater  práticas misóginas, machistas e LGBTQIAPNfóbicas. Nossa equipe é composta por pesquisadoras, pesquisadores, professoras, professores, gestoras, gestores, alunas e alunos da graduação engajados em investigar como se processam as práticas de exclusão nos vários espaçostempos históricos e dos cotidianos, sejam os dos cursos de formações de professoras, os das escolas ou de outros espaços sociais que estejam relacionados com a história das mulheres, com as questões dos gêneros, das sexualidades e com a laicidade do Estado, pois somente num Estado Laíco as maiorias minorizadas serão respeitada…
-      </p>
+  <span className="font-bold text-black">Bem-vindx, educadorx!</span> Este espaço 
+  é seu canal direto de interação com nosso grupo de pesquisa. Aqui, você pode solicitar 
+  materiais didáticos, compartilhar sugestões, manifestar interesse em integrar nosso grupo 
+  de estudos ou relatar casos de violência relacionada a gênero e sexualidade em escolas 
+  (com identificação, se possível, para melhor orientação). Também oferecemos a possibilidade 
+  de agendar encontros presenciais em escolas do Rio de Janeiro, onde realizamos atividades 
+  pedagógicas baseadas em nossas pesquisas. O GESDI está preparado para oferecer suporte 
+  técnico e acolhimento seguro, utilizando nossa experiência em educação e direitos humanos.{" "}
+  <span className="font-bold text-black">Lembre-se: você não está sozinhx! 💜</span>
+</p>
 
       <h2 className="text-2xl font-semibold mb-4 text-blue-800">Nossa Equipe</h2>
       <ul className="space-y-6">

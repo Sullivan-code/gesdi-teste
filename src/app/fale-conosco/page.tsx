@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react";
-import { FaInstagram, FaFacebook, FaWhatsapp } from "react-icons/fa";
+import { FaInstagram, FaFacebook, FaWhatsapp, FaYoutube } from "react-icons/fa"; // Importando o ícone do YouTube
 import { useUser } from "@clerk/clerk-react";
 
 const FaleConosco: React.FC = () => {
@@ -83,14 +83,18 @@ const FaleConosco: React.FC = () => {
 
         {/* Social Media Icons */}
         <div className="flex space-x-8">
-          <a href="https://www.instagram.com/gesdiuerj/?igsh=MWx2N3lram1qZG42OA%3D%3D#" target="_blank" rel="noopener noreferrer" className="p-6 rounded-full bg-pink-500 hover:bg-pink-600 transition-all duration-300 transform hover:scale-110 shadow-lg">
-            <FaInstagram size={50} className="text-white" />
+          <a href="https://www.instagram.com/gesdiuerj/?igsh=MWx2N3lram1qZG42OA%3D%3D#" target="_blank" rel="noopener noreferrer" className="p-4 sm:p-6 rounded-full bg-pink-500 hover:bg-pink-600 transition-all duration-300 transform hover:scale-110 shadow-lg">
+            <FaInstagram size={40} className="text-white sm:text-5xl" />
           </a>
-          <a href="https://www.facebook.com/gesdi1?rdid=ljJOZP5hiZ3dfLit&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1BGUtcS9We%2F#" target="_blank" rel="noopener noreferrer" className="p-6 rounded-full bg-blue-500 hover:bg-blue-600 transition-all duration-300 transform hover:scale-110 shadow-lg">
-            <FaFacebook size={50} className="text-white" />
+          <a href="https://www.facebook.com/gesdi1?rdid=ljJOZP5hiZ3dfLit&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1BGUtcS9We%2F#" target="_blank" rel="noopener noreferrer" className="p-4 sm:p-6 rounded-full bg-blue-500 hover:bg-blue-600 transition-all duration-300 transform hover:scale-110 shadow-lg">
+            <FaFacebook size={40} className="text-white sm:text-5xl" />
           </a>
-          <a href="https://wa.me/5521972883178" target="_blank" rel="noopener noreferrer" className="p-6 rounded-full bg-green-500 hover:bg-green-600 transition-all duration-300 transform hover:scale-110 shadow-lg">
-            <FaWhatsapp size={50} className="text-white" />
+          <a href="https://wa.me/5521972883178" target="_blank" rel="noopener noreferrer" className="p-4 sm:p-6 rounded-full bg-green-500 hover:bg-green-600 transition-all duration-300 transform hover:scale-110 shadow-lg">
+            <FaWhatsapp size={40} className="text-white sm:text-5xl" />
+          </a>
+          {/* Add YouTube Icon */}
+          <a href="https://www.youtube.com/@GESDIparaTodxs/featured" target="_blank" rel="noopener noreferrer" className="p-4 sm:p-6 rounded-full bg-red-600 hover:bg-red-700 transition-all duration-300 transform hover:scale-110 shadow-lg">
+            <FaYoutube size={40} className="text-white sm:text-5xl" />
           </a>
         </div>
 
@@ -117,6 +121,25 @@ const FaleConosco: React.FC = () => {
             className="text-2xl font-semibold text-blue-600 hover:text-blue-800 transition duration-300"
           >
             Programa de Pós-Graduação em Educação Faculdade de Educação
+          </a>
+
+          {/* New Partnerships */}
+          <a
+            href="https://www.instagram.com/CafeComCurriculo/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-2xl font-semibold text-blue-600 hover:text-blue-800 transition duration-300"
+          >
+            Café com Currículo
+          </a>
+
+          <a
+            href="https://ppgedu.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-2xl font-semibold text-blue-600 hover:text-blue-800 transition duration-300"
+          >
+            Faculdade de Formação de Professores, Campus São Gonçalo
           </a>
         </div>
       </div>

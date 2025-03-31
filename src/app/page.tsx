@@ -40,10 +40,10 @@ export default function Home() {
       {/* Fixed background image */}
       <div
         className="fixed inset-0 w-full h-full bg-cover bg-center"
-        style={{ backgroundImage: "url('/images/gesdi.jpg')" }}
+        style={{ backgroundImage: "url('/images/flag.jpg')" }}
       >
         {/* White overlay for a lighter effect */}
-        <div className="absolute inset-0 bg-white/90"></div>
+        <div className="absolute inset-0 bg-white/80"></div>
       </div>
 
       {/* Content */}

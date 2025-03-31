@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 function Loading() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-4">
+    <div className="flex flex-col items-center justify-center min-h-screen gap-4 px-4">
       <motion.div
         animate={{
           rotateY: 360,
@@ -29,7 +29,7 @@ function Loading() {
           `,
           boxShadow: "0 0 20px rgba(0,0,0,0.1)"
         }}
-        className="w-24 h-24 rounded-full flex items-center justify-center"
+        className="w-16 h-16 md:w-24 md:h-24 rounded-full flex items-center justify-center"
       >
         <motion.div
           animate={{
@@ -41,7 +41,7 @@ function Loading() {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="w-16 h-16 bg-white rounded-full"
+          className="w-10 h-10 md:w-16 md:h-16 bg-white rounded-full"
         />
       </motion.div>
 
@@ -53,13 +53,13 @@ function Loading() {
           duration: 2,
           repeat: Infinity,
         }}
-        className="text-lg font-medium text-center max-w-md"
+        className="text-base md:text-lg font-medium text-center max-w-xs md:max-w-md"
       >
         Carregando... Estamos preparando seu perfil! ❤️
       </motion.p>
 
       <motion.div 
-        className="flex gap-2 mt-4"
+        className="flex gap-1 md:gap-2 mt-2 md:mt-4"
         animate={{
           scale: [1, 1.1, 1],
         }}
@@ -72,7 +72,7 @@ function Loading() {
           <motion.span
             key={i}
             animate={{
-              y: [0, -10, 0],
+              y: [0, -8, 0],
               opacity: [0.6, 1, 0.6],
             }}
             transition={{
@@ -80,7 +80,7 @@ function Loading() {
               repeat: Infinity,
               delay: i * 0.1,
             }}
-            className="text-2xl"
+            className="text-xl md:text-2xl"
           >
             {emoji}
           </motion.span>

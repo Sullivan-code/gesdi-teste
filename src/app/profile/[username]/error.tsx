@@ -16,7 +16,7 @@ export default function Error({
 
   return (
     <div>
-      <h2>aAlgo deu errado!</h2>
+      <h2>Algo deu errado!</h2>
       <button
         onClick={
           // Attempt to recover by trying to re-render the segment

@@ -14,48 +14,30 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  username  String   @unique
-  clerkId   String   @unique
-  name      String?
-  bio       String?
-  image     String?
-  location  String?
-  website   String?
-  role      Role     @default(USER)  // Added role field
-  createdAt DateTime @default(now())
+  id String @id @default(cuid())
+  email String @unique
+  username String @unique
+  clerkId String @unique
+  name String?
+  bio String?
+  image String?
+  location String?
+  website String?
+  createdAt DateTime @default(now()) // member since 2020
   updatedAt DateTime @updatedAt
 
   // Relations: 
-  posts Post[] 
-  comments Comment[] 
-  likes Like[] 
-  books Book[] // Only one user (manager) should have books
-  
-  followers Follows[] @relation("following")
-  following Follows[] @relation("follower")
+  posts Post[] // One-to-many
+  comments Comment[] // One-to-many
+  likes Like[] // One-to-many
 
-  notifications Notification[] @relation("userNotifications")
-  notificationsCreated Notification[] @relation("notificationCreator")
+  followers Follows[] @relation("following") // users who follow this user
+  following Follows[] @relation("follower") // users this user follows
+
+  notifications Notification[] @relation("userNotifications") // notifications received by a user
+  notificationsCreated Notification[] @relation("notificationCreator") // notifications triggered by a user
 }
 
-model Book {
-  id        String   @id @default(cuid())
-  title     String
-  author    String
-  link      String
-  addedById String
-  createdAt DateTime @default(now())
-
-  // Relations
-  addedBy   User  @relation(fields: [addedById], references: [id], onDelete: Cascade)
-}
-
-enum Role {
-  USER
-  MANAGER // Only one account should have this role
-}
 
 model Post{
   id        String    @id @default(cuid())
@@ -71,6 +53,7 @@ model Post{
   likes Like[]
   notifications Notification[]
 }
+
 
 model Comment{
   id String @id @default(cuid())
