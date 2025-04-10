@@ -8,7 +8,7 @@ const livros = [
     descricao:
       "Uma análise entrelaçada sobre temas sociais contemporâneos. O conteúdo aborda perspectivas múltiplas com enfoque crítico e interdisciplinar.",
     capa: "/images/capas/1.jpg",
-    link: "/ebooks/Ebook-Entrelacando-Pesquisas-Historias-de-Mulheres-Generos-e-Sexualidades.pdf", // PDF local
+    link: "/ebooks/Ebook-Entrelacando-Pesquisas-Historias-de-Mulheres-Generos-e-Sexualidades.pdf",
     botaoTexto: "Ler Livro",
   },
   {
@@ -59,7 +59,7 @@ const App = () => {
             </h2>
 
             <p className="text-gray-800 dark:text-gray-300 mb-3 font-medium">
-              Autor: {livro.autor}
+              Autorxs/Organizadorxs: {livro.autor}
             </p>
 
             {livro.descricao && (
