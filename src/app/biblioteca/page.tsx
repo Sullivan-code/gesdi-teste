@@ -1,9 +1,12 @@
+"use client";
+
 import React from 'react';
+import { FaWhatsapp } from 'react-icons/fa';
 
 const livros = [
   {
     id: 1,
-    titulo: "Entrelaçando Pesquisas",
+    titulo: "Entrelaçando Pesquisas: História das Mulheres, Gêneros e Sexualidades",
     autor: "Denize Sepulveda e Renan Corrêa",
     descricao:
       "Uma análise entrelaçada sobre temas sociais contemporâneos. O conteúdo aborda perspectivas múltiplas com enfoque crítico e interdisciplinar.",
@@ -23,7 +26,7 @@ const livros = [
   },
   {
     id: 3,
-    titulo: "Emancipação Social",
+    titulo: "Emancipação social e exclusão no cotidiano escolar: A homofobia e sua influência nas tessituras identitárias",
     autor: "Denize Sepulveda",
     descricao:
       "Discussões sobre a busca por justiça social e caminhos de transformação social a partir de uma ótica crítica. Ideal para estudos em ciências sociais.",
@@ -33,7 +36,7 @@ const livros = [
   },
 ];
 
-const App = () => {
+const Biblioteca: React.FC = () => {
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl md:text-5xl font-extrabold mb-8 text-center text-purple-700 drop-shadow-lg">
@@ -49,9 +52,7 @@ const App = () => {
             <img
               src={livro.capa}
               alt={`Capa do livro ${livro.titulo}`}
-              className={`w-full h-72 object-cover rounded-t-lg ${
-                livro.id === 1 ? 'object-right' : 'object-center'
-              }`}
+              className={`w-full h-72 object-cover rounded-t-lg ${livro.id === 1 ? 'object-right' : 'object-center'}`}
             />
 
             <h2 className="text-2xl font-bold mt-4 mb-2 text-gray-900 dark:text-gray-100 line-clamp-2">
@@ -81,8 +82,21 @@ const App = () => {
           </div>
         ))}
       </div>
+
+      {/* Botão do WhatsApp */}
+      <div className="flex justify-center mt-16">
+        <a
+          href="https://wa.me/5521972883178"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center space-x-3 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full text-xl transition-all duration-300 shadow-lg hover:scale-105"
+        >
+          <FaWhatsapp size={24} />
+          <span>Compre o seu livro</span>
+        </a>
+      </div>
     </div>
   );
 };
 
-export default App;
+export default Biblioteca;
