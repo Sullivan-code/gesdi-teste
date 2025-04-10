@@ -59,7 +59,7 @@ const App = () => {
             </h2>
 
             <p className="text-gray-800 dark:text-gray-300 mb-3 font-medium">
-              Autorxs/Organizadorxs: {livro.autor}
+              Autora: {livro.autor}
             </p>
 
             {livro.descricao && (
