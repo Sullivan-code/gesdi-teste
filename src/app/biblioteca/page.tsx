@@ -7,7 +7,7 @@ const livros = [
   {
     id: 1,
     titulo: "Entrelaçando Pesquisas: História das Mulheres, Gêneros e Sexualidades",
-    autor: "Denize Sepulveda e Renan Corrêa",
+    autor: "Autorxs/Organizadorxs: Denize Sepulveda e Renan Corrêa",
     descricao:
       "Uma análise entrelaçada sobre temas sociais contemporâneos. O conteúdo aborda perspectivas múltiplas com enfoque crítico e interdisciplinar.",
     capa: "/images/capas/1.jpg",
@@ -17,7 +17,7 @@ const livros = [
   {
     id: 2,
     titulo: "Gêneros, Sexualidades e Educação na Ordem do Discurso",
-    autor: "Denize Sepulveda e Ivan Amaro",
+    autor: "Autorxs/Organizadorxs: Denize Sepulveda e Ivan Amaro",
     descricao:
       "Uma reflexão sobre a construção dos discursos que atravessam os campos da sexualidade, gênero e educação. Essencial para debates acadêmicos e sociais. O livro oferece uma análise profunda das dinâmicas discursivas presentes nas práticas educacionais e sociais, destacando como o discurso molda compreensões sobre identidade, diversidade e inclusão. Com embasamento teórico sólido, os autores promovem um debate crítico, necessário para transformar espaços pedagógicos em ambientes mais acolhedores e conscientes.",
     capa: "/images/capas/generos.jpg",
@@ -27,7 +27,7 @@ const livros = [
   {
     id: 3,
     titulo: "Emancipação social e exclusão no cotidiano escolar: A homofobia e sua influência nas tessituras identitárias",
-    autor: "Denize Sepulveda",
+    autor: "Autora: Denize Sepulveda",
     descricao:
       "Discussões sobre a busca por justiça social e caminhos de transformação social a partir de uma ótica crítica. Ideal para estudos em ciências sociais.",
     capa: "/images/capas/emacipa.jpg",
@@ -60,7 +60,7 @@ const Biblioteca: React.FC = () => {
             </h2>
 
             <p className="text-gray-800 dark:text-gray-300 mb-3 font-medium">
-              Autora: {livro.autor}
+              {livro.autor}
             </p>
 
             {livro.descricao && (
