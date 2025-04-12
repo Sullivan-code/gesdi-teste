@@ -3,12 +3,11 @@
 import React from 'react';
 import { motion } from "framer-motion";
 
-
 const QuemSomos: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 font-sans text-gray-800">
       <motion.h1
-        className="text-6xl font-bold mb-6 text-center" // Changed from text-3xl to text-6xl
+        className="text-6xl font-bold mb-6 text-center"
         initial={{ scale: 1 }}
         animate={{ scale: [1, 1.1, 1] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -21,204 +20,212 @@ const QuemSomos: React.FC = () => {
       >
         Quem Somos
       </motion.h1>
+
       <p className="text-lg mb-8 text-gray-700">
-  <span className="font-bold text-black">Bem-vindx, educadorx!</span> Este espaço 
-  é seu canal direto de interação com nosso grupo de pesquisa. Aqui, você pode solicitar 
-  materiais didáticos, compartilhar sugestões, manifestar interesse em integrar nosso grupo 
-  de estudos ou relatar casos de violência relacionada a gênero e sexualidade em escolas 
-  (com identificação, se possível, para melhor orientação). Também oferecemos a possibilidade 
-  de agendar encontros presenciais em escolas do Rio de Janeiro, onde realizamos atividades 
-  pedagógicas baseadas em nossas pesquisas. O GESDI está preparado para oferecer suporte 
-  técnico e acolhimento seguro, utilizando nossa experiência em educação e direitos humanos.{" "}
-  <span className="font-bold text-black">Lembre-se: você não está sozinhx! 💜</span>
-</p>
+        <span className="font-bold text-black">Bem-vindx, educadorx!</span> Este espaço 
+        é seu canal direto de interação com nosso grupo de pesquisa. Aqui, você pode solicitar 
+        materiais didáticos, compartilhar sugestões, manifestar interesse em integrar nosso grupo 
+        de estudos ou relatar casos de violência relacionada a gênero e sexualidade em escolas 
+        (com identificação, se possível, para melhor orientação). Também oferecemos a possibilidade 
+        de agendar encontros presenciais em escolas do Rio de Janeiro, onde realizamos atividades 
+        pedagógicas baseadas em nossas pesquisas. O GESDI está preparado para oferecer suporte 
+        técnico e acolhimento seguro, utilizando nossa experiência em educação e direitos humanos.{" "}
+        <span className="font-bold text-black">Lembre-se: você não está sozinhx! 💜</span>
+      </p>
 
       <h2 className="text-2xl font-semibold mb-4 text-blue-800">Nossa Equipe</h2>
       <ul className="space-y-6">
-      <li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
-  <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
-    <img 
-      src="/images/2.1DenizeSepulveda.jpg" 
-      alt="Denize Sepulveda" 
-      className="w-full h-full object-cover" 
-    />
-  </div>
-  <div>
-    <strong className="text-xl font-medium text-gray-900">Denize Sepulveda</strong> - Líder do GESDI<br />
-    <span className="text-gray-600">Professora Associada da Faculdade de Educação da UERJ, do PROPED e do PPGEDU.</span><br />
-    <div className="flex space-x-4 mt-2">
-      <a 
-        href="https://lattes.cnpq.br/9823519245400422" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-      >
-        Lattes
-      </a>
-      <a 
-        href="mailto:denizesepulveda@hotmail.com" 
-        className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-      >
-        Email
-      </a>
-    </div>
-  </div>
-</li>
+        {/* Denize Sepulveda */}
+        <li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+          <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
+            <img 
+              src="/images/2.1DenizeSepulveda.jpg" 
+              alt="Denize Sepulveda" 
+              className="w-full h-full object-cover" 
+            />
+          </div>
+          <div>
+            <strong className="text-xl font-medium text-gray-900">Denize Sepulveda</strong>
+            <div className="text-gray-600 mt-1">Líder do GESDI</div>
+            <span className="text-gray-600">Professora Associada da Faculdade de Educação da UERJ, do PROPED e do PPGEDU.</span>
+            <div className="flex space-x-4 mt-2">
+              <a 
+                href="https://lattes.cnpq.br/9823519245400422" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+              >
+                Lattes
+              </a>
+              <a 
+                href="mailto:denizesepulveda@hotmail.com" 
+                className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+              >
+                Email
+              </a>
+            </div>
+          </div>
+        </li>
 
         {/* José Antonio Sepulveda */}
         <li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
-  <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
-    <img 
-      src="images/2.2JoséAntonioSepulveda.jpg" 
-      alt="José Antonio Sepulveda" 
-      className="w-full h-full object-cover" 
-    />
-  </div>
-  <div>
-    <strong className="text-xl font-medium text-gray-900">José Antonio Sepulveda</strong> - Vice-líder do GESDI<br />
-    <span className="text-gray-600">Professor Associado da Faculdade de Educação da UFF e do PPG em Educação.</span><br />
-    <div className="flex space-x-4 mt-2">
-      <a 
-        href="https://lattes.cnpq.br/6594616768887294" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-      >
-        Lattes
-      </a>
-      <a 
-        href="mailto:josesepulveda@id.uff.br" 
-        className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-      >
-        Email
-      </a>
-    </div>
-  </div>
-</li>
+          <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
+            <img 
+              src="images/2.2JoséAntonioSepulveda.jpg" 
+              alt="José Antonio Sepulveda" 
+              className="w-full h-full object-cover" 
+            />
+          </div>
+          <div>
+            <strong className="text-xl font-medium text-gray-900">José Antonio Sepulveda</strong>
+            <div className="text-gray-600 mt-1">Vice-líder do GESDI</div>
+            <span className="text-gray-600">Professor Associado da Faculdade de Educação da UFF e do PPG em Educação.</span>
+            <div className="flex space-x-4 mt-2">
+              <a 
+                href="https://lattes.cnpq.br/6594616768887294" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+              >
+                Lattes
+              </a>
+              <a 
+                href="mailto:josesepulveda@id.uff.br" 
+                className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+              >
+                Email
+              </a>
+            </div>
+          </div>
+        </li>
 
         {/* Amanda Mendonça */}
         <li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
-  <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
-    <img 
-      src="images/2.3AmandaMendonça.jpg" 
-      alt="Amanda Mendonça" 
-      className="w-full h-full object-cover" 
-    />
-  </div>
-  <div>
-    <strong className="text-xl font-medium text-gray-900">Amanda Mendonça</strong> - Coordenadora do GESDI<br />
-    <span className="text-gray-600">Professora Adjunta da Faculdade de Formação de Professores da UERJ e do PPGEDU.</span><br />
-    <div className="flex space-x-4 mt-2">
-      <a 
-        href="http://lattes.cnpq.br/7666060740151928" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-      >
-        Lattes
-      </a>
-      <a 
-        href="mailto:amandademendonca@gmail.com" 
-        className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-      >
-        Email
-      </a>
-    </div>
-  </div>
-</li>
+          <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
+            <img 
+              src="images/2.3AmandaMendonça.jpg" 
+              alt="Amanda Mendonça" 
+              className="w-full h-full object-cover" 
+            />
+          </div>
+          <div>
+            <strong className="text-xl font-medium text-gray-900">Amanda Mendonça</strong>
+            <div className="text-gray-600 mt-1">Coordenadora do GESDI</div>
+            <span className="text-gray-600">Professora Adjunta da Faculdade de Formação de Professores da UERJ e do PPGEDU.</span>
+            <div className="flex space-x-4 mt-2">
+              <a 
+                href="http://lattes.cnpq.br/7666060740151928" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+              >
+                Lattes
+              </a>
+              <a 
+                href="mailto:amandademendonca@gmail.com" 
+                className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+              >
+                Email
+              </a>
+            </div>
+          </div>
+        </li>
 
         {/* Alexandre Campos Duarte */}
-<li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
-  <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
-    <img 
-      src="images/2.4AlexandreCampos.jpeg" 
-      alt="Alexandre Campos Duarte" 
-      className="w-full h-full object-cover" 
-    />
-  </div>
-  <div>
-    <strong className="text-xl font-medium text-gray-900">Alexandre Campos Duarte</strong> - Pesquisador do GESDI<br />
-    <span className="text-gray-600">Mestrando em Educação PPGEDU/UERJ.</span><br />
-    <div className="flex space-x-4 mt-2">
-      <a 
-        href="https://lattes.cnpq.br/1399516105425528" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-      >
-        Lattes
-      </a>
-      <a 
-        href="mailto:acamposduarte83@gmail.com" 
-        className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-      >
-        Email
-      </a>
-    </div>
-  </div>
-</li>
+        <li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+          <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
+            <img 
+              src="images/2.4AlexandreCampos.jpeg" 
+              alt="Alexandre Campos Duarte" 
+              className="w-full h-full object-cover" 
+            />
+          </div>
+          <div>
+            <strong className="text-xl font-medium text-gray-900">Alexandre Campos Duarte</strong>
+            <div className="text-gray-600 mt-1">Pesquisador do GESDI</div>
+            <span className="text-gray-600">Mestrando em Educação PPGEDU/UERJ.</span>
+            <div className="flex space-x-4 mt-2">
+              <a 
+                href="https://lattes.cnpq.br/1399516105425528" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+              >
+                Lattes
+              </a>
+              <a 
+                href="mailto:acamposduarte83@gmail.com" 
+                className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+              >
+                Email
+              </a>
+            </div>
+          </div>
+        </li>
 
-{/* Alexandre Mérida */}
-<li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
-  <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
-    <img 
-      src="images/2.5AlexandreMérida.jpg" 
-      alt="Alexandre Mérida" 
-      className="w-full h-full object-cover" 
-    />
-  </div>
-  <div>
-    <strong className="text-xl font-medium text-gray-900">Alexandre Mérida</strong> - Pesquisador do GESDI<br />
-    <span className="text-gray-600">Doutorando em Educação PPGEDU/UERJ.</span><br />
-    <div className="flex space-x-4 mt-2">
-      <a 
-        href="http://lattes.cnpq.br/3932560830557767" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-      >
-        Lattes
-      </a>
-      <a 
-        href="mailto:alexandremerida@yahoo.com.br" 
-        className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-      >
-        Email
-      </a>
-    </div>
-  </div>
-</li>
+        {/* Alexandre Mérida */}
+        <li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+          <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
+            <img 
+              src="images/2.5AlexandreMérida.jpg" 
+              alt="Alexandre Mérida" 
+              className="w-full h-full object-cover" 
+            />
+          </div>
+          <div>
+            <strong className="text-xl font-medium text-gray-900">Alexandre Mérida</strong>
+            <div className="text-gray-600 mt-1">Pesquisador do GESDI</div>
+            <span className="text-gray-600">Doutorando em Educação PPGEDU/UERJ.</span>
+            <div className="flex space-x-4 mt-2">
+              <a 
+                href="http://lattes.cnpq.br/3932560830557767" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+              >
+                Lattes
+              </a>
+              <a 
+                href="mailto:alexandremerida@yahoo.com.br" 
+                className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+              >
+                Email
+              </a>
+            </div>
+          </div>
+        </li>
 
-       {/* Anna Clara Granado */}
-<li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
-  <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
-    <img 
-      src="images/2.6AnnaClaraGranado.jpg" 
-      alt="Anna Clara Granado" 
-      className="w-full h-full object-cover" 
-    />
-  </div>
-  <div>
-    <strong className="text-xl font-medium text-gray-900">Anna Clara Granado</strong> - Pesquisadora do GESDI<br />
-    <span className="text-gray-600">Doutoranda em Educação PPGEDU/UERJ.</span><br />
-    <div className="flex space-x-4 mt-2">
-      <a 
-        href="https://lattes.cnpq.br/7686366039128027" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-      >
-        Lattes
-      </a>
-      <a 
-        href="mailto:annaclaragranado@gmail.com" 
-        className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-      >
-        Email
-      </a>
-    </div>
-  </div>
-</li>
+        {/* Anna Clara Granado */}
+        <li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+          <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
+            <img 
+              src="images/2.6AnnaClaraGranado.jpg" 
+              alt="Anna Clara Granado" 
+              className="w-full h-full object-cover" 
+            />
+          </div>
+          <div>
+            <strong className="text-xl font-medium text-gray-900">Anna Clara Granado</strong>
+            <div className="text-gray-600 mt-1">Pesquisadora do GESDI</div>
+            <span className="text-gray-600">Doutoranda em Educação PPGEDU/UERJ.</span>
+            <div className="flex space-x-4 mt-2">
+              <a 
+                href="https://lattes.cnpq.br/7686366039128027" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+              >
+                Lattes
+              </a>
+              <a 
+                href="mailto:annaclaragranado@gmail.com" 
+                className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+              >
+                Email
+              </a>
+            </div>
+          </div>
+        </li>
 
        {/* Brunna Santana Ribas */}
 <li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
@@ -230,7 +237,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Brunna Santana Ribas</strong> - Pesquisadora do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Brunna Santana Ribas</strong> Pesquisadora do GESDI<br />
     <span className="text-gray-600">Mestranda em Educação PPGEDU/UERJ.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -261,7 +268,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Carolina Manoel</strong> - Pesquisadora do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Carolina Manoel</strong> Pesquisadora do GESDI<br />
     <span className="text-gray-600">Mestranda em Educação PPGEDU/UERJ.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -292,7 +299,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Daniella Anatalicio</strong> - Pesquisadora do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Daniella Anatalicio</strong> Pesquisadora do GESDI<br />
     <span className="text-gray-600">Graduanda em Pedagogia na Faculdade de Formação de Professores/UERJ.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -323,7 +330,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Domingos Neto</strong> - Pesquisador do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Domingos Neto</strong> Pesquisador do GESDI<br />
     <span className="text-gray-600">Doutorando em Educação PPGEDU/UERJ.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -354,7 +361,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Eurídice Hespanhol</strong> - Pesquisadora do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Eurídice Hespanhol</strong> Pesquisadora do GESDI<br />
     <span className="text-gray-600">Doutoranda do PROPED/UERJ.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -385,7 +392,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Iasmin Carvalho</strong> - Pesquisadora do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Iasmin Carvalho</strong> Pesquisadora do GESDI<br />
     <span className="text-gray-600">Graduanda em História UFF e Bolsista de Iniciação Científica.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -416,7 +423,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Izadora Montenegro</strong> - Pesquisadora do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Izadora Montenegro</strong> Pesquisadora do GESDI<br />
     <span className="text-gray-600">Mestranda em Educação PROPED/UERJ.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -446,7 +453,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Joana Bispo</strong> - Pesquisadora do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Joana Bispo</strong> Pesquisadora do GESDI<br />
     <span className="text-gray-600">Doutoranda em Educação PPGEDU/UERJ.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -477,7 +484,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Lívia Martins</strong> - Pesquisadora do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Lívia Martins</strong> Pesquisadora do GESDI<br />
     <span className="text-gray-600">Doutoranda em Educação PPGEDU/UERJ.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -508,7 +515,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Luciana Khun</strong> - Pesquisadora do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Luciana Khun</strong> Pesquisadora do GESDI<br />
     <span className="text-gray-600">Mestranda em Educação PPGEDU/UERJ.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -539,7 +546,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Maria Priscila de Jesus</strong> - Pesquisadora do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Maria Priscila de Jesus</strong> Pesquisadora do GESDI<br />
     <span className="text-gray-600">Doutoranda em Educação PPGEDU/UERJ.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -570,7 +577,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Nathalia Neves</strong> - Pesquisadora do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Nathalia Neves</strong> Pesquisadora do GESDI<br />
     <span className="text-gray-600">Graduanda em Pedagogia na Faculdade de Formação de Professores/UERJ e Bolsista de Iniciação Científica.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -601,7 +608,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Priscila Vasconcelos</strong> - Pesquisadora do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Priscila Vasconcelos</strong> Pesquisadora do GESDI<br />
     <span className="text-gray-600">Mestranda em Educação PPGEDU/UERJ.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -632,7 +639,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Saulo Quintanilha</strong> - Pesquisador do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Saulo Quintanilha</strong> Pesquisador do GESDI<br />
     <span className="text-gray-600">Graduando em Pedagogia na Faculdade de Formação de Professores/UERJ.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -663,7 +670,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Renan Corrêa</strong> - Pesquisador do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Renan Corrêa</strong> Pesquisador do GESDI<br />
     <span className="text-gray-600">Mestre em Educação PPGEDU/UERJ.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -694,7 +701,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Thalles Gustavo Leite Couto</strong> - Pesquisador do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Thalles Gustavo Leite Couto</strong> Pesquisador do GESDI<br />
     <span className="text-gray-600">Bolsista de Iniciação Científica pela CNPQ. Graduando em história pela UERJ FFP.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -725,7 +732,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Thaya Pereira</strong> - Pesquisadora do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Thaya Pereira</strong>  Pesquisadora do GESDI<br />
     <span className="text-gray-600">Mestranda em Educação PPGEDU/UERJ.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -756,7 +763,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Teresa Vitória Alves</strong> - Pesquisadora do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Teresa Vitória Alves</strong>  Pesquisadora do GESDI<br />
     <span className="text-gray-600">Doutora PPGEDU/UERJ.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -787,7 +794,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Welma Mafra</strong> - Pesquisadora do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Welma Mafra</strong>  Pesquisadora do GESDI<br />
     <span className="text-gray-600">Doutoranda em Educação PROPED/UERJ.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -818,7 +825,7 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Yuri Sepulveda</strong> - Pesquisador do GESDI<br />
+    <strong className="text-xl font-medium text-gray-900">Yuri Sepulveda</strong> Pesquisador do GESDI<br />
     <span className="text-gray-600">Doutorando da Faculdade de Letras na Universidade de Lisboa.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
@@ -849,8 +856,8 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Maria Leão</strong> - Pesquisadora do GESDI<br />
-    <span className="text-gray-600">Doutoranda em Educação PPGEDU/UERJ.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Maria Leão</strong>  Pesquisadora do GESDI<br />
+    <span className="text-gray-600">Doutora em Saúde Coletiva pela UERJ.</span><br />
     <div className="flex space-x-4 mt-2">
       <a 
         href="http://lattes.cnpq.br/4165705965583820" 
