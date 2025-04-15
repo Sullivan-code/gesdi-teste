@@ -227,7 +227,7 @@ const QuemSomos: React.FC = () => {
           </div>
         </li>
 
-       {/* Brunna Santana Ribas */}
+     {/* Brunna Santana Ribas */}
 <li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
   <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
     <img 
@@ -237,8 +237,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Brunna Santana Ribas</strong> Pesquisadora do GESDI<br />
-    <span className="text-gray-600">Mestranda em Educação PPGEDU/UERJ.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Brunna Santana Ribas</strong>
+    <div className="text-gray-600 mt-1">Pesquisadora do GESDI</div>
+    <span className="text-gray-600">Mestranda em Educação PPGEDU/UERJ.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="http://lattes.cnpq.br/7172410089757446" 
@@ -258,7 +259,7 @@ const QuemSomos: React.FC = () => {
   </div>
 </li>
 
-        {/* Carolina Manoel */}
+{/* Carolina Manoel */}
 <li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
   <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
     <img 
@@ -268,8 +269,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Carolina Manoel</strong> Pesquisadora do GESDI<br />
-    <span className="text-gray-600">Mestranda em Educação PPGEDU/UERJ.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Carolina Manoel</strong>
+    <div className="text-gray-600 mt-1">Pesquisadora do GESDI</div>
+    <span className="text-gray-600">Mestranda em Educação PPGEDU/UERJ.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="http://lattes.cnpq.br/2453773348555960" 
@@ -289,7 +291,7 @@ const QuemSomos: React.FC = () => {
   </div>
 </li>
 
-       {/* Daniella Anatalicio */}
+{/* Daniella Anatalicio */}
 <li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
   <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
     <img 
@@ -299,8 +301,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Daniella Anatalicio</strong> Pesquisadora do GESDI<br />
-    <span className="text-gray-600">Graduanda em Pedagogia na Faculdade de Formação de Professores/UERJ.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Daniella Anatalicio</strong>
+    <div className="text-gray-600 mt-1">Pesquisadora do GESDI</div>
+    <span className="text-gray-600">Graduanda em Pedagogia na Faculdade de Formação de Professores/UERJ.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="https://lattes.cnpq.br/3634254240009251" 
@@ -320,7 +323,7 @@ const QuemSomos: React.FC = () => {
   </div>
 </li>
 
-      {/* Domingos Neto */}
+{/* Domingos Neto */}
 <li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
   <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
     <img 
@@ -330,8 +333,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Domingos Neto</strong> Pesquisador do GESDI<br />
-    <span className="text-gray-600">Doutorando em Educação PPGEDU/UERJ.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Domingos Neto</strong>
+    <div className="text-gray-600 mt-1">Pesquisador do GESDI</div>
+    <span className="text-gray-600">Doutorando em Educação PPGEDU/UERJ.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="https://lattes.cnpq.br/1745843005823969" 
@@ -361,8 +365,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Eurídice Hespanhol</strong> Pesquisadora do GESDI<br />
-    <span className="text-gray-600">Doutoranda do PROPED/UERJ.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Eurídice Hespanhol</strong>
+    <div className="text-gray-600 mt-1">Pesquisadora do GESDI</div>
+    <span className="text-gray-600">Doutoranda do PROPED/UERJ.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="https://lattes.cnpq.br/4650510230480031" 
@@ -392,8 +397,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Iasmin Carvalho</strong> Pesquisadora do GESDI<br />
-    <span className="text-gray-600">Graduanda em História UFF e Bolsista de Iniciação Científica.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Iasmin Carvalho</strong>
+    <div className="text-gray-600 mt-1">Pesquisadora do GESDI</div>
+    <span className="text-gray-600">Graduanda em História UFF e Bolsista de Iniciação Científica.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="http://lattes.cnpq.br/8043364539348837" 
@@ -423,8 +429,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Izadora Montenegro</strong> Pesquisadora do GESDI<br />
-    <span className="text-gray-600">Mestranda em Educação PROPED/UERJ.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Izadora Montenegro</strong>
+    <div className="text-gray-600 mt-1">Pesquisadora do GESDI</div>
+    <span className="text-gray-600">Mestranda em Educação PROPED/UERJ.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="http://lattes.cnpq.br/6493841196346170" 
@@ -443,7 +450,8 @@ const QuemSomos: React.FC = () => {
     </div>
   </div>
 </li>
-        {/* Joana Bispo */}
+
+{/* Joana Bispo */}
 <li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
   <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
     <img 
@@ -453,8 +461,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Joana Bispo</strong> Pesquisadora do GESDI<br />
-    <span className="text-gray-600">Doutoranda em Educação PPGEDU/UERJ.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Joana Bispo</strong>
+    <div className="text-gray-600 mt-1">Pesquisadora do GESDI</div>
+    <span className="text-gray-600">Doutoranda em Educação PPGEDU/UERJ.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="http://lattes.cnpq.br/6936804170054508" 
@@ -484,8 +493,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Lívia Martins</strong> Pesquisadora do GESDI<br />
-    <span className="text-gray-600">Doutoranda em Educação PPGEDU/UERJ.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Lívia Martins</strong>
+    <div className="text-gray-600 mt-1">Pesquisadora do GESDI</div>
+    <span className="text-gray-600">Doutoranda em Educação PPGEDU/UERJ.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="http://lattes.cnpq.br/1027008848981790" 
@@ -515,8 +525,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Luciana Khun</strong> Pesquisadora do GESDI<br />
-    <span className="text-gray-600">Mestranda em Educação PPGEDU/UERJ.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Luciana Khun</strong>
+    <div className="text-gray-600 mt-1">Pesquisadora do GESDI</div>
+    <span className="text-gray-600">Mestranda em Educação PPGEDU/UERJ.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="http://lattes.cnpq.br/3754038235782229" 
@@ -536,7 +547,7 @@ const QuemSomos: React.FC = () => {
   </div>
 </li>
 
-        {/* Maria Priscila de Jesus */}
+{/* Maria Priscila de Jesus */}
 <li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
   <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
     <img 
@@ -546,8 +557,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Maria Priscila de Jesus</strong> Pesquisadora do GESDI<br />
-    <span className="text-gray-600">Doutoranda em Educação PPGEDU/UERJ.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Maria Priscila de Jesus</strong>
+    <div className="text-gray-600 mt-1">Pesquisadora do GESDI</div>
+    <span className="text-gray-600">Doutoranda em Educação PPGEDU/UERJ.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="https://lattes.cnpq.br/3134230769559151" 
@@ -567,6 +579,38 @@ const QuemSomos: React.FC = () => {
   </div>
 </li>
 
+{/* Maria Leão */}
+<li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+  <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
+    <img 
+      src="images/2.26MariaLeão.jpg" 
+      alt="Maria Leão" 
+      className="w-full h-full object-cover" 
+    />
+  </div>
+  <div>
+    <strong className="text-xl font-medium text-gray-900">Maria Leão</strong>
+    <div className="text-gray-600 mt-1">Pesquisadora do GESDI</div>
+    <span className="text-gray-600">Doutora em Saúde Coletiva pela UERJ.</span>
+    <div className="flex space-x-4 mt-2">
+      <a 
+        href="http://lattes.cnpq.br/4165705965583820" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+      >
+        Lattes
+      </a>
+      <a 
+        href="mailto:marialasilveira@gmail.com" 
+        className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+      >
+        Email
+      </a>
+    </div>
+  </div>
+</li>
+
 {/* Nathalia Neves */}
 <li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
   <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
@@ -577,8 +621,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Nathalia Neves</strong> Pesquisadora do GESDI<br />
-    <span className="text-gray-600">Graduanda em Pedagogia na Faculdade de Formação de Professores/UERJ e Bolsista de Iniciação Científica.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Nathalia Neves</strong>
+    <div className="text-gray-600 mt-1">Pesquisadora do GESDI</div>
+    <span className="text-gray-600">Graduanda em Pedagogia na Faculdade de Formação de Professores/UERJ e Bolsista de Iniciação Científica.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="http://lattes.cnpq.br/8066388256058665" 
@@ -608,8 +653,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Priscila Vasconcelos</strong> Pesquisadora do GESDI<br />
-    <span className="text-gray-600">Mestranda em Educação PPGEDU/UERJ.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Priscila Vasconcelos</strong>
+    <div className="text-gray-600 mt-1">Pesquisadora do GESDI</div>
+    <span className="text-gray-600">Mestranda em Educação PPGEDU/UERJ.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="http://lattes.cnpq.br/1046686092525820" 
@@ -639,8 +685,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Saulo Quintanilha</strong> Pesquisador do GESDI<br />
-    <span className="text-gray-600">Graduando em Pedagogia na Faculdade de Formação de Professores/UERJ.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Saulo Quintanilha</strong>
+    <div className="text-gray-600 mt-1">Pesquisador do GESDI</div>
+    <span className="text-gray-600">Graduando em Pedagogia na Faculdade de Formação de Professores/UERJ.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="https://lattes.cnpq.br/1536916386284163" 
@@ -670,8 +717,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Renan Corrêa</strong> Pesquisador do GESDI<br />
-    <span className="text-gray-600">Mestre em Educação PPGEDU/UERJ.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Renan Corrêa</strong>
+    <div className="text-gray-600 mt-1">Pesquisador do GESDI</div>
+    <span className="text-gray-600">Mestre em Educação PPGEDU/UERJ.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="http://lattes.cnpq.br/6024484066696308" 
@@ -695,14 +743,15 @@ const QuemSomos: React.FC = () => {
 <li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
   <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
     <img 
-      src="/images/ThallesCouto.jpg" 
+      src="images/ThallesCouto.jpg" 
       alt="Thales Couto" 
       className="w-full h-full object-cover" 
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Thalles Gustavo Leite Couto</strong> Pesquisador do GESDI<br />
-    <span className="text-gray-600">Bolsista de Iniciação Científica pela CNPQ. Graduando em história pela UERJ FFP.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Thalles Gustavo Leite Couto</strong>
+    <div className="text-gray-600 mt-1">Pesquisador do GESDI</div>
+    <span className="text-gray-600">Bolsista de Iniciação Científica pela CNPQ. Graduando em história pela UERJ FFP.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="https://lattes.cnpq.br/5764104512075788" 
@@ -732,8 +781,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Thaya Pereira</strong>  Pesquisadora do GESDI<br />
-    <span className="text-gray-600">Mestranda em Educação PPGEDU/UERJ.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Thaya Pereira</strong>
+    <div className="text-gray-600 mt-1">Pesquisadora do GESDI</div>
+    <span className="text-gray-600">Mestranda em Educação PPGEDU/UERJ.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="http://lattes.cnpq.br/1980614090349648" 
@@ -763,8 +813,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Teresa Vitória Alves</strong>  Pesquisadora do GESDI<br />
-    <span className="text-gray-600">Doutora PPGEDU/UERJ.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Teresa Vitória Alves</strong>
+    <div className="text-gray-600 mt-1">Pesquisadora do GESDI</div>
+    <span className="text-gray-600">Doutora PPGEDU/UERJ.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="https://lattes.cnpq.br/2217655483474385" 
@@ -794,8 +845,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Welma Mafra</strong>  Pesquisadora do GESDI<br />
-    <span className="text-gray-600">Doutoranda em Educação PROPED/UERJ.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Welma Mafra</strong>
+    <div className="text-gray-600 mt-1">Pesquisadora do GESDI</div>
+    <span className="text-gray-600">Doutoranda em Educação PROPED/UERJ.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="http://lattes.cnpq.br/5613079347968598" 
@@ -825,8 +877,9 @@ const QuemSomos: React.FC = () => {
     />
   </div>
   <div>
-    <strong className="text-xl font-medium text-gray-900">Yuri Sepulveda</strong> Pesquisador do GESDI<br />
-    <span className="text-gray-600">Doutorando da Faculdade de Letras na Universidade de Lisboa.</span><br />
+    <strong className="text-xl font-medium text-gray-900">Yuri Sepulveda</strong>
+    <div className="text-gray-600 mt-1">Pesquisador do GESDI</div>
+    <span className="text-gray-600">Doutorando da Faculdade de Letras na Universidade de Lisboa.</span>
     <div className="flex space-x-4 mt-2">
       <a 
         href="https://lattes.cnpq.br/0972299128690561" 
@@ -846,36 +899,6 @@ const QuemSomos: React.FC = () => {
   </div>
 </li>
 
-{/* Maria Leão */}
-<li className="bg-white p-6 rounded-lg shadow-md flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
-  <div className="w-20 h-20 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden">
-    <img 
-      src="images/2.26MariaLeão.jpg" 
-      alt="Maria Leão" 
-      className="w-full h-full object-cover" 
-    />
-  </div>
-  <div>
-    <strong className="text-xl font-medium text-gray-900">Maria Leão</strong>  Pesquisadora do GESDI<br />
-    <span className="text-gray-600">Doutora em Saúde Coletiva pela UERJ.</span><br />
-    <div className="flex space-x-4 mt-2">
-      <a 
-        href="http://lattes.cnpq.br/4165705965583820" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-      >
-        Lattes
-      </a>
-      <a 
-        href="mailto:marialasilveira@gmail.com" 
-        className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-      >
-        Email
-      </a>
-    </div>
-  </div>
-</li>
       </ul>
 
       <h2 className="text-2xl font-semibold mt-10 mb-4 text-blue-800">Nossas Funções</h2>

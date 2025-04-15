@@ -31,7 +31,7 @@ const livros = [
     descricao:
       "Discussões sobre a busca por justiça social e caminhos de transformação social a partir de uma ótica crítica. Ideal para estudos em ciências sociais.",
     capa: "/images/capas/emacipa.jpg",
-    link: "https://www.editoracrv.com.br/produtos/detalhes/38850-emancipacao-social-e-exclusao-no-cotidiano-escolar-bra-homofobia-e-sua-influencia-nas-tessituras-identitarias",
+    link: "https://www.instagram.com/gesdiuerj/?igsh=MWx2N3lram1qZG42OA%3D%3D#",
     botaoTexto: "Comprar Livro",
   },
 ];
