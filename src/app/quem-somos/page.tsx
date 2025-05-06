@@ -30,7 +30,7 @@ const QuemSomos: React.FC = () => {
         de agendar encontros presenciais em escolas do Rio de Janeiro, onde realizamos atividades 
         pedagógicas baseadas em nossas pesquisas. O GESDI está preparado para oferecer suporte 
         técnico e acolhimento seguro, utilizando nossa experiência em educação e direitos humanos.{" "}
-        <span className="font-bold text-black">Lembre-se: você não está sozinhxx! 💜</span>
+        <span className="font-bold text-black">Lembre-se: você não está sozinhx! 💜</span>
       </p>
 
       <h2 className="text-2xl font-semibold mb-4 text-blue-800">Nossa Equipe</h2>
