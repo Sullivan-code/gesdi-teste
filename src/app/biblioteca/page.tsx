@@ -36,6 +36,81 @@ const livros = [
   },
 ];
 
+const textos = [
+  {
+    titulo: "QUESTÕES DE GÊNEROS NO ESPORTE ESCOLAR",
+    autor: "Gabriel Magalhães Rodrigues Coelho",
+    link: "https://www.bdtd.uerj.br:8443/handle/1/23783",
+    lattes: "http://lattes.cnpq.br/2839092604126253",
+  },
+  {
+    titulo: "Orelhões emoldurados: A expulsão escolar de mulheres trans e travestis na cidade do Rio de Janeiro",
+    autor: "Fábio Pinheiro Ramos de Souza",
+    link: "https://ppgedu.org/wp-content/uploads/2024/08/2019-Fabio-Pinheiro.pdf",
+    lattes: "http://lattes.cnpq.br/9844171318236692",
+  },
+  {
+    titulo: "Vozes para um protagonismo feminino",
+    autor: "Euridice Hespanhol Macedo Pessoa",
+    link: "https://www.bdtd.uerj.br:8443/handle/1/19034",
+    lattes: "http://lattes.cnpq.br/4650510230480031",
+  },
+  {
+    titulo: "Gêneros e Sexualidades nos cursos de Geografia e de Pedagogia",
+    autor: "Renan Corrêa dos Santos",
+    link: "https://www.bdtd.uerj.br:8443/handle/1/22882",
+    lattes: "http://lattes.cnpq.br/6024484066696308",
+  },
+  {
+    titulo: "Gêneros e Sexualidades no Plano Municipal de Educação de São Gonçalo",
+    autor: "Maíra Martins da Silva",
+    link: "https://www.bdtd.uerj.br:8443/bitstream/1/19139/4/Disserta%C3%A7%C3%A3o%20-%20Ma%C3%ADra%20Marins%20-%202020%20-%20completa.pdf",
+    lattes: "http://lattes.cnpq.br/6978951156027813",
+  },
+  {
+    titulo: "A visibilidade LGBTI+ e o protagonismo lésbico",
+    autor: "Melina Aurora Terra Fereira",
+    link: "https://www.bdtd.uerj.br:8443/handle/1/19208",
+    lattes: "http://lattes.cnpq.br/4018634421374364",
+  },
+  {
+    titulo: "TRANSGÊNERXS E TRAVESTIS NOS PRESÍDIOS FEMININOS DO RIO DE JANEIRO",
+    autor: "Penélope Cavalcanti",
+    link: "https://www.bdtd.uerj.br:8443/handle/1/20043",
+    lattes: "http://lattes.cnpq.br/1549989180611934",
+  },
+  {
+    titulo: "O corfebol e a equidade entre os gêneros na Escola",
+    autor: "Juan Leal Garcia",
+    link: "https://www.bdtd.uerj.br:8443/handle/1/19270",
+    lattes: "http://lattes.cnpq.br/6580433082414756",
+  },
+  {
+    titulo: "Transicionando a educação: o Preparem Niterói como agente transformador da sala de aula",
+    autor: "Ana Carolina Lydia Ferreira da Silva",
+    link: "https://www.bdtd.uerj.br:8443/bitstream/1/21900/2/Disserta%C3%A7%C3%A3o%20-%20Ana%20Carolina%20Lydia%20Ferreira%20da%20Silva%20-%202023%20-%20Completo.pdf",
+    lattes: "http://lattes.cnpq.br/2669505554815496",
+  },
+  {
+    titulo: "Práticas lúdicas educativas com o cotidiano da Escola Municipal Pastor Ricardo Parise",
+    autor: "Joana Nély Marques Bispo",
+    link: "https://www.bdtd.uerj.br:8443/handle/1/9897",
+    lattes: "http://lattes.cnpq.br/6936804170054508",
+  },
+  {
+    titulo: "Livros Didáticos de História Como Lugar de Memoria",
+    autor: "Fábio da Silva Gomes",
+    link: "https://rima.ufrrj.br/jspui/handle/20.500.14407/13853",
+    lattes: null,
+  },
+  {
+    titulo: "O INSTITUTO PROFISSIONAL FEMININO ORSINA DA FONSECA",
+    autor: "Teresa Vitória Fernandes Alves",
+    link: "https://www.bdtd.uerj.br:8443/handle/1/23702",
+    lattes: "http://lattes.cnpq.br/2217655483474385",
+  },
+];
+
 const Biblioteca: React.FC = () => {
   return (
     <div className="container mx-auto p-6">
@@ -43,6 +118,7 @@ const Biblioteca: React.FC = () => {
         <span className="text-purple-900">Biblioteca Virtual📚</span>
       </h1>
 
+      {/* LIVROS */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
         {livros.map((livro) => (
           <div
@@ -54,15 +130,10 @@ const Biblioteca: React.FC = () => {
               alt={`Capa do livro ${livro.titulo}`}
               className={`w-full h-72 object-cover rounded-t-lg ${livro.id === 1 ? 'object-right' : 'object-center'}`}
             />
-
             <h2 className="text-2xl font-bold mt-4 mb-2 text-gray-900 dark:text-gray-100 line-clamp-2">
               {livro.titulo}
             </h2>
-
-            <p className="text-gray-800 dark:text-gray-300 mb-3 font-medium">
-              {livro.autor}
-            </p>
-
+            <p className="text-gray-800 dark:text-gray-300 mb-3 font-medium">{livro.autor}</p>
             {livro.descricao && (
               <div className="px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg flex-grow max-h-32 overflow-hidden border border-gray-300 dark:border-gray-600 mb-4">
                 <p className="text-gray-700 dark:text-gray-200 text-sm line-clamp-4">
@@ -70,7 +141,6 @@ const Biblioteca: React.FC = () => {
                 </p>
               </div>
             )}
-
             <a
               href={livro.link}
               target="_blank"
@@ -79,6 +149,40 @@ const Biblioteca: React.FC = () => {
             >
               {livro.botaoTexto}
             </a>
+          </div>
+        ))}
+      </div>
+
+      {/* TEXTOS DISPONÍVEIS NA INTERNET */}
+      <h2 className="text-2xl md:text-4xl font-bold mt-20 mb-6 text-purple-800 text-center">
+        Textos Disponíveis na Internet
+      </h2>
+      <div className="space-y-6">
+        {textos.map((texto, index) => (
+          <div
+            key={index}
+            className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-md"
+          >
+            <h3 className="text-xl font-semibold text-purple-900 mb-2">{texto.titulo}</h3>
+            <p className="text-gray-700 dark:text-gray-300 mb-2">Autor(a): {texto.autor}</p>
+            <a
+              href={texto.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:underline mr-4"
+            >
+              Acessar Texto
+            </a>
+            {texto.lattes && (
+              <a
+                href={texto.lattes}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                Currículo Lattes
+              </a>
+            )}
           </div>
         ))}
       </div>

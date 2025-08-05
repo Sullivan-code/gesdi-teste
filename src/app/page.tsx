@@ -49,7 +49,7 @@ export default function Home() {
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center">
         <h1 className="text-4xl text-black font-bold text-center px-4">
-          GGrupo de Pesquisa e Estudos Gêneros, Sexualidades e Diferenças nos Vários <span className="italic">EspaçosTempos</span> da História e dos Cotidianos
+          Grupo de Pesquisa e Estudos Gêneros, Sexualidades e Diferenças nos Vários <span className="italic">EspaçosTempos</span> da História e dos Cotidianos
         </h1>
         <div className="mt-8 text-2xl text-black text-center px-4">
           O GESDI é um grupo de pesquisa interdisciplinar que combate misoginia, machismo e LGBTQIAPN+fobia, analisando práticas de exclusão em contextos históricos e cotidianos. Formado por pesquisadores, professores e estudantes, investiga discriminações em espaços educacionais e sociais ligados a gênero, sexualidades e laicidade estatal – essencial para proteger minorias. Seus estudos identificam o avanço do conservadorismo brasileiro como catalisador da violência contra mulheres e LGBTQIAPN+. Diante desse cenário, o grupo fortalece seu papel ativo no combate diário a todas as formas de opressão, unindo produção acadêmica e militância política pela equidade social.</div>
