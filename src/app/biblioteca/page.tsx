@@ -109,6 +109,12 @@ const textos = [
     link: "https://www.bdtd.uerj.br:8443/handle/1/23702",
     lattes: "http://lattes.cnpq.br/2217655483474385",
   },
+  {
+    titulo: "PROGRAMA DE TRAVESTI: AS TRANS-EXPERIÊNCIAS EM EDUCAÇÃO E MÍDIA",
+    autor: "Sara Wagner York",
+    link: "https://drive.google.com/file/d/1Tz9hVBs3TmGTjtMu4h7XFoy_ffVO9Npe/view?usp=sharing",
+    lattes: "http://lattes.cnpq.br/9084306265158131",
+  },
 ];
 
 const Biblioteca: React.FC = () => {
