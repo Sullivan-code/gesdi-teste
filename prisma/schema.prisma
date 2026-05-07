@@ -97,6 +97,12 @@ model Follows{
   @@id([followerId, followingId]) // composite primary key prevents duplicate follows
 }
 
+enum NotificationType {
+  LIKE
+  COMMENT
+  FOLLOW
+}
+
 model Notification {
   id        String   @id @default(cuid())
   userId    String                  
@@ -116,8 +122,28 @@ model Notification {
   @@index([userId, createdAt])
 }
 
-enum NotificationType {
-  LIKE     
-  COMMENT 
-  FOLLOW   
+model Book {
+  id          String   @id @default(cuid())
+  title       String
+  author      String
+  description String?
+  coverImage  String   // URL ou caminho da imagem
+  fileUrl     String   // URL ou caminho do PDF
+  linkType    LinkType @default(BUY)
+  externalLink String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relação com usuário que adicionou (opcional)
+  createdBy   String?
+  
+  @@index([title])
+  @@index([createdBy])
+}
+
+enum LinkType {
+  BUY
+  READ
+  EXTERNAL
 }
