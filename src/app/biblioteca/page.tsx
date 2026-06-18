@@ -13,6 +13,10 @@ interface Book {
   fileUrl: string;
   linkType: 'BUY' | 'READ' | 'EXTERNAL';
   externalLink: string | null;
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy?: string | null;
 }
 
 const Biblioteca: React.FC = () => {
@@ -30,18 +34,61 @@ const Biblioteca: React.FC = () => {
 
   const fetchBooks = async () => {
     try {
-      const response = await fetch('/api/books');
-      const data = await response.json();
-      console.log('Dados recebidos:', data);
+      setLoading(true);
+      setError('');
       
-      if (Array.isArray(data)) {
-        setBooks(data);
-      } else {
-        setError('Formato de dados inválido');
+      const response = await fetch('/api/books');
+      
+      // Check if response is ok
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
       }
+      
+      const data = await response.json();
+      console.log('Dados recebidos da API:', data);
+      
+      let booksArray: Book[] = [];
+      
+      // Handle different response formats
+      if (Array.isArray(data)) {
+        // Direct array response
+        booksArray = data;
+      } else if (data.books && Array.isArray(data.books)) {
+        // Response with books property
+        booksArray = data.books;
+      } else if (data.data && Array.isArray(data.data)) {
+        // Response with data property
+        booksArray = data.data;
+      } else if (data.success && Array.isArray(data.data)) {
+        // Response with success and data
+        booksArray = data.data;
+      } else {
+        console.error('Formato de dados inesperado:', data);
+        setError('Formato de dados inválido. Verifique o console para mais detalhes.');
+        setBooks([]);
+        return;
+      }
+      
+      // Validate and map the data
+      if (booksArray.length > 0) {
+        // Check if the first item has the expected structure
+        const firstBook = booksArray[0];
+        if (!firstBook.id || !firstBook.title) {
+          console.error('Estrutura de livro inválida:', firstBook);
+          setError('Estrutura de dados inválida. Verifique o console.');
+          setBooks([]);
+          return;
+        }
+        setBooks(booksArray);
+      } else {
+        setBooks([]);
+      }
+      
     } catch (err) {
-      setError('Erro ao carregar livros');
-      console.error(err);
+      console.error('Erro ao buscar livros:', err);
+      setError(err instanceof Error ? err.message : 'Erro ao carregar livros');
+      setBooks([]);
     } finally {
       setLoading(false);
     }
@@ -82,7 +129,17 @@ const Biblioteca: React.FC = () => {
   
   if (error) return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center p-8 text-red-500">{error}</div>
+      <div className="text-center p-8 max-w-md">
+        <div className="text-red-500 text-2xl mb-4">⚠️</div>
+        <h2 className="text-xl font-semibold text-gray-800 mb-2">Erro ao carregar livros</h2>
+        <p className="text-red-500 mb-4">{error}</p>
+        <button 
+          onClick={fetchBooks}
+          className="px-6 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-800 transition"
+        >
+          Tentar novamente
+        </button>
+      </div>
     </div>
   );
 
@@ -148,25 +205,41 @@ const Biblioteca: React.FC = () => {
                 )}
                 
                 {/* Botão de ação */}
-                <a
-                  href={
-                    book.linkType === 'READ' 
-                      ? book.fileUrl 
-                      : (book.externalLink || '#')
-                  }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`inline-block w-full text-center px-4 py-2 rounded-lg font-semibold transition duration-200 ${
-                    book.linkType === 'BUY' 
-                      ? 'bg-green-600 hover:bg-green-700 text-white'
-                      : book.linkType === 'READ'
-                      ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                      : 'bg-purple-600 hover:bg-purple-700 text-white'
-                  }`}
-                >
-                  {book.linkType === 'BUY' ? '💰 Comprar' : 
-                   book.linkType === 'READ' ? '📖 Ler Agora' : '🔗 Acessar'}
-                </a>
+                {book.linkType === 'READ' && book.fileUrl && (
+                  <a
+                    href={book.fileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block w-full text-center px-4 py-2 rounded-lg font-semibold transition duration-200 bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    📖 Ler Agora
+                  </a>
+                )}
+                {book.linkType === 'BUY' && book.externalLink && (
+                  <a
+                    href={book.externalLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block w-full text-center px-4 py-2 rounded-lg font-semibold transition duration-200 bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    💰 Comprar
+                  </a>
+                )}
+                {book.linkType === 'EXTERNAL' && book.externalLink && (
+                  <a
+                    href={book.externalLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block w-full text-center px-4 py-2 rounded-lg font-semibold transition duration-200 bg-purple-600 hover:bg-purple-700 text-white"
+                  >
+                    🔗 Acessar
+                  </a>
+                )}
+                {(!book.fileUrl && !book.externalLink) && (
+                  <span className="inline-block w-full text-center px-4 py-2 rounded-lg font-semibold bg-gray-400 text-white cursor-not-allowed">
+                    Indisponível
+                  </span>
+                )}
               </div>
             </div>
           ))}
