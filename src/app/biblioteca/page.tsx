@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Lock } from 'lucide-react';
+import { Plus, Lock, X } from 'lucide-react';
 
 interface Book {
   id: string;
@@ -27,6 +27,21 @@ const Biblioteca: React.FC = () => {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  
+  // Form states
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    title: '',
+    author: '',
+    description: '',
+    linkType: 'BUY' as 'BUY' | 'READ' | 'EXTERNAL',
+    externalLink: '',
+    coverImage: null as File | null,
+    fileUrl: null as File | null,
+  });
+  const [formLoading, setFormLoading] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [formSuccess, setFormSuccess] = useState('');
 
   useEffect(() => {
     fetchBooks();
@@ -39,7 +54,6 @@ const Biblioteca: React.FC = () => {
       
       const response = await fetch('/api/books');
       
-      // Check if response is ok
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
@@ -50,18 +64,13 @@ const Biblioteca: React.FC = () => {
       
       let booksArray: Book[] = [];
       
-      // Handle different response formats
       if (Array.isArray(data)) {
-        // Direct array response
         booksArray = data;
       } else if (data.books && Array.isArray(data.books)) {
-        // Response with books property
         booksArray = data.books;
       } else if (data.data && Array.isArray(data.data)) {
-        // Response with data property
         booksArray = data.data;
       } else if (data.success && Array.isArray(data.data)) {
-        // Response with success and data
         booksArray = data.data;
       } else {
         console.error('Formato de dados inesperado:', data);
@@ -70,9 +79,7 @@ const Biblioteca: React.FC = () => {
         return;
       }
       
-      // Validate and map the data
       if (booksArray.length > 0) {
-        // Check if the first item has the expected structure
         const firstBook = booksArray[0];
         if (!firstBook.id || !firstBook.title) {
           console.error('Estrutura de livro inválida:', firstBook);
@@ -106,7 +113,11 @@ const Biblioteca: React.FC = () => {
       setShowPasswordModal(false);
       setPassword('');
       setPasswordError('');
-      router.push('/admin/books');
+      setShowForm(true);
+      // Scroll to form
+      setTimeout(() => {
+        document.getElementById('book-form')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
     } else {
       setPasswordError('Senha incorreta!');
     }
@@ -116,6 +127,92 @@ const Biblioteca: React.FC = () => {
     setShowPasswordModal(false);
     setPassword('');
     setPasswordError('');
+  };
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, files } = e.target;
+    if (files && files[0]) {
+      setFormData(prev => ({ ...prev, [name]: files[0] }));
+    }
+  };
+
+  const handleSubmitBook = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormLoading(true);
+    setFormError('');
+    setFormSuccess('');
+
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('author', formData.author);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('linkType', formData.linkType);
+      formDataToSend.append('externalLink', formData.externalLink);
+      
+      if (formData.coverImage) {
+        formDataToSend.append('coverImage', formData.coverImage);
+      }
+      
+      if (formData.fileUrl && formData.linkType === 'READ') {
+        formDataToSend.append('fileUrl', formData.fileUrl);
+      }
+
+      const response = await fetch('/api/books', {
+        method: 'POST',
+        body: formDataToSend,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Erro ao criar livro');
+      }
+
+      setFormSuccess('✅ Livro adicionado com sucesso!');
+      setFormData({
+        title: '',
+        author: '',
+        description: '',
+        linkType: 'BUY',
+        externalLink: '',
+        coverImage: null,
+        fileUrl: null,
+      });
+      
+      // Refresh books list
+      await fetchBooks();
+      
+      // Reset file inputs
+      const fileInputs = document.querySelectorAll('input[type="file"]');
+      fileInputs.forEach(input => (input as HTMLInputElement).value = '');
+      
+    } catch (err) {
+      console.error('Erro ao criar livro:', err);
+      setFormError(err instanceof Error ? err.message : 'Erro ao criar livro');
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const closeForm = () => {
+    setShowForm(false);
+    setFormError('');
+    setFormSuccess('');
+    setFormData({
+      title: '',
+      author: '',
+      description: '',
+      linkType: 'BUY',
+      externalLink: '',
+      coverImage: null,
+      fileUrl: null,
+    });
   };
 
   if (loading) return (
@@ -160,6 +257,161 @@ const Biblioteca: React.FC = () => {
           <Plus size={24} />
         </button>
       </div>
+
+      {/* Formulário para adicionar livro */}
+      {showForm && (
+        <div id="book-form" className="mb-10 bg-white rounded-lg shadow-lg p-6 border-2 border-purple-200 relative">
+          <button
+            onClick={closeForm}
+            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+          >
+            <X size={24} />
+          </button>
+          
+          <h2 className="text-2xl font-bold text-purple-800 mb-4">📖 Adicionar Novo Livro</h2>
+          
+          {formSuccess && (
+            <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg">
+              {formSuccess}
+            </div>
+          )}
+          
+          {formError && (
+            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+              ❌ {formError}
+            </div>
+          )}
+          
+          <form onSubmit={handleSubmitBook} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Título do Livro *
+                </label>
+                <input
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleFormChange}
+                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  placeholder="Digite o título"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Autor(a) *
+                </label>
+                <input
+                  type="text"
+                  name="author"
+                  value={formData.author}
+                  onChange={handleFormChange}
+                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  placeholder="Digite o nome do autor"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Descrição
+              </label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleFormChange}
+                rows={3}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                placeholder="Breve descrição do livro"
+              />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tipo de Link *
+                </label>
+                <select
+                  name="linkType"
+                  value={formData.linkType}
+                  onChange={handleFormChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                >
+                  <option value="BUY">💰 Comprar</option>
+                  <option value="READ">📖 Ler</option>
+                  <option value="EXTERNAL">🔗 Externo</option>
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Link Externo
+                </label>
+                <input
+                  type="url"
+                  name="externalLink"
+                  value={formData.externalLink}
+                  onChange={handleFormChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  placeholder="URL para compra ou acesso"
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Capa do Livro
+                </label>
+                <input
+                  type="file"
+                  name="coverImage"
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                />
+                <p className="text-xs text-gray-500 mt-1">Formatos: JPG, PNG, WebP</p>
+              </div>
+              
+              {formData.linkType === 'READ' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Arquivo PDF
+                  </label>
+                  <input
+                    type="file"
+                    name="fileUrl"
+                    onChange={handleFileChange}
+                    accept=".pdf"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Apenas arquivos PDF</p>
+                </div>
+              )}
+            </div>
+            
+            <div className="flex gap-3 pt-2">
+              <button
+                type="submit"
+                disabled={formLoading}
+                className="px-6 py-2 bg-purple-700 hover:bg-purple-800 text-white font-bold rounded-lg transition duration-200 disabled:opacity-50"
+              >
+                {formLoading ? 'Adicionando...' : '📚 Adicionar Livro'}
+              </button>
+              <button
+                type="button"
+                onClick={closeForm}
+                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition duration-200"
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
       
       {/* Grid de Livros */}
       {books.length === 0 ? (
@@ -257,7 +509,7 @@ const Biblioteca: React.FC = () => {
                 </div>
                 <h2 className="text-2xl font-bold text-purple-900">🔒 Acesso Restrito</h2>
                 <p className="text-gray-600 mt-2">
-                  Digite a senha para acessar o painel administrativo
+                  Digite a senha para adicionar um novo livro
                 </p>
               </div>
               

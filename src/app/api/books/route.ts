@@ -1,119 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/lib/prisma'; // 👈 USANDO O PRISMA DO LIB
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 import { existsSync } from 'fs';
-import { auth } from '@clerk/nextjs/server';
 
-const prisma = new PrismaClient();
-
-export async function POST(req: NextRequest) {
-  try {
-    const { userId } = await auth();
-    if (!userId) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
-    // Find the user by clerkId
-    const user = await prisma.user.findUnique({
-      where: { clerkId: userId }
-    });
-
-    if (!user) {
-      return NextResponse.json(
-        { success: false, error: 'User not found' },
-        { status: 404 }
-      );
-    }
-
-    const formData = await req.formData();
-    
-    const title = formData.get('title') as string;
-    const author = formData.get('author') as string;
-    const description = formData.get('description') as string;
-    const linkType = formData.get('linkType') as string;
-    const externalLink = formData.get('externalLink') as string;
-    
-    // Validate required fields
-    if (!title || !author) {
-      return NextResponse.json(
-        { success: false, error: 'Title and author are required' },
-        { status: 400 }
-      );
-    }
-    
-    // Upload da capa
-    const coverImageFile = formData.get('coverImage') as File;
-    let coverImageUrl = '';
-    
-    if (coverImageFile && coverImageFile.size > 0) {
-      const coverBytes = await coverImageFile.arrayBuffer();
-      const coverBuffer = Buffer.from(coverBytes);
-      
-      const timestamp = Date.now();
-      const cleanFileName = coverImageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-      const coverFileName = `cover-${timestamp}-${cleanFileName}`;
-      const coverPath = path.join(process.cwd(), 'public/uploads/covers', coverFileName);
-      
-      const coverDir = path.join(process.cwd(), 'public/uploads/covers');
-      if (!existsSync(coverDir)) {
-        await mkdir(coverDir, { recursive: true });
-      }
-      
-      await writeFile(coverPath, coverBuffer);
-      coverImageUrl = `/uploads/covers/${coverFileName}`;
-    }
-    
-    // Upload do PDF (only if linkType is READ)
-    const pdfFile = formData.get('fileUrl') as File;
-    let pdfUrl = '';
-    
-    if (pdfFile && pdfFile.size > 0 && linkType === 'READ') {
-      const pdfBytes = await pdfFile.arrayBuffer();
-      const pdfBuffer = Buffer.from(pdfBytes);
-      
-      const timestamp = Date.now();
-      const cleanFileName = pdfFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-      const pdfFileName = `pdf-${timestamp}-${cleanFileName}`;
-      const pdfPath = path.join(process.cwd(), 'public/uploads/pdfs', pdfFileName);
-      
-      const pdfDir = path.join(process.cwd(), 'public/uploads/pdfs');
-      if (!existsSync(pdfDir)) {
-        await mkdir(pdfDir, { recursive: true });
-      }
-      
-      await writeFile(pdfPath, pdfBuffer);
-      pdfUrl = `/uploads/pdfs/${pdfFileName}`;
-    }
-
-    // Create book with the correct schema
-    const book = await prisma.book.create({
-      data: {
-        title,
-        author,
-        description: description || null,
-        coverImage: coverImageUrl,
-        fileUrl: pdfUrl,
-        linkType: linkType as any || 'BUY',
-        externalLink: externalLink || null,
-        createdBy: user.id,
-        isActive: true
-      }
-    });
-    
-    return NextResponse.json({ success: true, book });
-  } catch (error) {
-    console.error('Erro ao criar livro:', error);
-    return NextResponse.json(
-      { success: false, error: 'Erro ao criar livro: ' + (error as Error).message },
-      { status: 500 }
-    );
-  }
-}
-
+// GET - Buscar todos os livros ativos
 export async function GET(req: NextRequest) {
   try {
     const books = await prisma.book.findMany({
@@ -131,34 +22,137 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function PUT(req: NextRequest) {
+// POST - Criar um novo livro
+export async function POST(req: NextRequest) {
   try {
-    const { userId } = await auth();
-    if (!userId) {
+    const formData = await req.formData();
+    
+    const title = formData.get('title') as string;
+    const author = formData.get('author') as string;
+    const description = formData.get('description') as string;
+    const linkType = formData.get('linkType') as string;
+    const externalLink = formData.get('externalLink') as string;
+    
+    // Validar campos obrigatórios
+    if (!title || !author) {
       return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
+        { success: false, error: 'Título e autor são obrigatórios' },
+        { status: 400 }
       );
     }
+    
+    // Upload da capa
+    const coverImageFile = formData.get('coverImage') as File;
+    let coverImageUrl = '';
+    
+    if (coverImageFile && coverImageFile.size > 0) {
+      try {
+        const coverBytes = await coverImageFile.arrayBuffer();
+        const coverBuffer = Buffer.from(coverBytes);
+        
+        const timestamp = Date.now();
+        const cleanFileName = coverImageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+        const coverFileName = `cover-${timestamp}-${cleanFileName}`;
+        const coverPath = path.join(process.cwd(), 'public/uploads/covers', coverFileName);
+        
+        const coverDir = path.join(process.cwd(), 'public/uploads/covers');
+        if (!existsSync(coverDir)) {
+          await mkdir(coverDir, { recursive: true });
+        }
+        
+        await writeFile(coverPath, coverBuffer);
+        coverImageUrl = `/uploads/covers/${coverFileName}`;
+      } catch (error) {
+        console.error('Erro ao salvar capa:', error);
+        return NextResponse.json(
+          { success: false, error: 'Erro ao salvar a imagem da capa' },
+          { status: 500 }
+        );
+      }
+    }
+    
+    // Upload do PDF (apenas se linkType for READ)
+    const pdfFile = formData.get('fileUrl') as File;
+    let pdfUrl = '';
+    
+    if (pdfFile && pdfFile.size > 0 && linkType === 'READ') {
+      try {
+        const pdfBytes = await pdfFile.arrayBuffer();
+        const pdfBuffer = Buffer.from(pdfBytes);
+        
+        const timestamp = Date.now();
+        const cleanFileName = pdfFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+        const pdfFileName = `pdf-${timestamp}-${cleanFileName}`;
+        const pdfPath = path.join(process.cwd(), 'public/uploads/pdfs', pdfFileName);
+        
+        const pdfDir = path.join(process.cwd(), 'public/uploads/pdfs');
+        if (!existsSync(pdfDir)) {
+          await mkdir(pdfDir, { recursive: true });
+        }
+        
+        await writeFile(pdfPath, pdfBuffer);
+        pdfUrl = `/uploads/pdfs/${pdfFileName}`;
+      } catch (error) {
+        console.error('Erro ao salvar PDF:', error);
+        return NextResponse.json(
+          { success: false, error: 'Erro ao salvar o arquivo PDF' },
+          { status: 500 }
+        );
+      }
+    }
 
+    // Criar o livro no banco de dados
+    const book = await prisma.book.create({
+      data: {
+        title,
+        author,
+        description: description || null,
+        coverImage: coverImageUrl || '/images/default-cover.jpg',
+        fileUrl: pdfUrl || '',
+        linkType: linkType as any || 'BUY',
+        externalLink: externalLink || null,
+        isActive: true
+      }
+    });
+    
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Livro adicionado com sucesso!',
+      book 
+    });
+  } catch (error) {
+    console.error('Erro ao criar livro:', error);
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Erro ao criar livro: ' + (error as Error).message 
+      },
+      { status: 500 }
+    );
+  }
+}
+
+// PUT - Atualizar um livro existente
+export async function PUT(req: NextRequest) {
+  try {
     const formData = await req.formData();
     const id = formData.get('id') as string;
     
     if (!id) {
       return NextResponse.json(
-        { success: false, error: 'Book ID is required' },
+        { success: false, error: 'ID do livro é obrigatório' },
         { status: 400 }
       );
     }
 
-    // Check if book exists
+    // Verificar se o livro existe
     const existingBook = await prisma.book.findUnique({
       where: { id }
     });
 
     if (!existingBook) {
       return NextResponse.json(
-        { success: false, error: 'Book not found' },
+        { success: false, error: 'Livro não encontrado' },
         { status: 404 }
       );
     }
@@ -170,66 +164,87 @@ export async function PUT(req: NextRequest) {
     const externalLink = formData.get('externalLink') as string;
     const isActive = formData.get('isActive') === 'true';
 
-    // Upload da capa (if new file provided)
+    // Upload da capa (se um novo arquivo for fornecido)
     const coverImageFile = formData.get('coverImage') as File;
     let coverImageUrl = existingBook.coverImage;
     
     if (coverImageFile && coverImageFile.size > 0) {
-      const coverBytes = await coverImageFile.arrayBuffer();
-      const coverBuffer = Buffer.from(coverBytes);
-      
-      const timestamp = Date.now();
-      const cleanFileName = coverImageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-      const coverFileName = `cover-${timestamp}-${cleanFileName}`;
-      const coverPath = path.join(process.cwd(), 'public/uploads/covers', coverFileName);
-      
-      const coverDir = path.join(process.cwd(), 'public/uploads/covers');
-      if (!existsSync(coverDir)) {
-        await mkdir(coverDir, { recursive: true });
+      try {
+        const coverBytes = await coverImageFile.arrayBuffer();
+        const coverBuffer = Buffer.from(coverBytes);
+        
+        const timestamp = Date.now();
+        const cleanFileName = coverImageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+        const coverFileName = `cover-${timestamp}-${cleanFileName}`;
+        const coverPath = path.join(process.cwd(), 'public/uploads/covers', coverFileName);
+        
+        const coverDir = path.join(process.cwd(), 'public/uploads/covers');
+        if (!existsSync(coverDir)) {
+          await mkdir(coverDir, { recursive: true });
+        }
+        
+        await writeFile(coverPath, coverBuffer);
+        coverImageUrl = `/uploads/covers/${coverFileName}`;
+      } catch (error) {
+        console.error('Erro ao salvar capa:', error);
+        return NextResponse.json(
+          { success: false, error: 'Erro ao salvar a imagem da capa' },
+          { status: 500 }
+        );
       }
-      
-      await writeFile(coverPath, coverBuffer);
-      coverImageUrl = `/uploads/covers/${coverFileName}`;
     }
 
-    // Upload do PDF (if new file provided)
+    // Upload do PDF (se um novo arquivo for fornecido)
     const pdfFile = formData.get('fileUrl') as File;
     let pdfUrl = existingBook.fileUrl;
     
     if (pdfFile && pdfFile.size > 0 && linkType === 'READ') {
-      const pdfBytes = await pdfFile.arrayBuffer();
-      const pdfBuffer = Buffer.from(pdfBytes);
-      
-      const timestamp = Date.now();
-      const cleanFileName = pdfFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-      const pdfFileName = `pdf-${timestamp}-${cleanFileName}`;
-      const pdfPath = path.join(process.cwd(), 'public/uploads/pdfs', pdfFileName);
-      
-      const pdfDir = path.join(process.cwd(), 'public/uploads/pdfs');
-      if (!existsSync(pdfDir)) {
-        await mkdir(pdfDir, { recursive: true });
+      try {
+        const pdfBytes = await pdfFile.arrayBuffer();
+        const pdfBuffer = Buffer.from(pdfBytes);
+        
+        const timestamp = Date.now();
+        const cleanFileName = pdfFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+        const pdfFileName = `pdf-${timestamp}-${cleanFileName}`;
+        const pdfPath = path.join(process.cwd(), 'public/uploads/pdfs', pdfFileName);
+        
+        const pdfDir = path.join(process.cwd(), 'public/uploads/pdfs');
+        if (!existsSync(pdfDir)) {
+          await mkdir(pdfDir, { recursive: true });
+        }
+        
+        await writeFile(pdfPath, pdfBuffer);
+        pdfUrl = `/uploads/pdfs/${pdfFileName}`;
+      } catch (error) {
+        console.error('Erro ao salvar PDF:', error);
+        return NextResponse.json(
+          { success: false, error: 'Erro ao salvar o arquivo PDF' },
+          { status: 500 }
+        );
       }
-      
-      await writeFile(pdfPath, pdfBuffer);
-      pdfUrl = `/uploads/pdfs/${pdfFileName}`;
     }
 
+    // Atualizar o livro
     const book = await prisma.book.update({
       where: { id },
       data: {
         title: title || existingBook.title,
         author: author || existingBook.author,
-        description: description || existingBook.description,
+        description: description !== undefined ? description : existingBook.description,
         coverImage: coverImageUrl,
         fileUrl: pdfUrl,
         linkType: linkType as any || existingBook.linkType,
-        externalLink: externalLink || existingBook.externalLink,
+        externalLink: externalLink !== undefined ? externalLink : existingBook.externalLink,
         isActive: isActive !== undefined ? isActive : existingBook.isActive,
         updatedAt: new Date()
       }
     });
 
-    return NextResponse.json({ success: true, book });
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Livro atualizado com sucesso!',
+      book 
+    });
   } catch (error) {
     console.error('Erro ao atualizar livro:', error);
     return NextResponse.json(
@@ -239,51 +254,41 @@ export async function PUT(req: NextRequest) {
   }
 }
 
+// DELETE - Deletar um livro (soft delete)
 export async function DELETE(req: NextRequest) {
   try {
-    const { userId } = await auth();
-    if (!userId) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
 
     if (!id) {
       return NextResponse.json(
-        { success: false, error: 'Book ID is required' },
+        { success: false, error: 'ID do livro é obrigatório' },
         { status: 400 }
       );
     }
 
-    // Check if book exists
+    // Verificar se o livro existe
     const existingBook = await prisma.book.findUnique({
       where: { id }
     });
 
     if (!existingBook) {
       return NextResponse.json(
-        { success: false, error: 'Book not found' },
+        { success: false, error: 'Livro não encontrado' },
         { status: 404 }
       );
     }
 
-    // Soft delete or hard delete? 
-    // Using soft delete (just deactivate)
+    // Soft delete (apenas desativar)
     await prisma.book.update({
       where: { id },
       data: { isActive: false }
     });
 
-    // For hard delete, uncomment this:
-    // await prisma.book.delete({
-    //   where: { id }
-    // });
-
-    return NextResponse.json({ success: true, message: 'Book deleted successfully' });
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Livro deletado com sucesso!' 
+    });
   } catch (error) {
     console.error('Erro ao deletar livro:', error);
     return NextResponse.json(

@@ -1,18 +1,28 @@
 import { PrismaClient } from '@prisma/client';
 
-// Defina um tipo global para o PrismaClient no NodeJS globalThis
+// URL FIXA do GESDI - IGNORA COMPLETAMENTE o .env
+const DATABASE_URL = "postgresql://GESDI_owner:npg_OqW6oEw7FZDd@ep-cool-wind-a5mk16gg-pooler.us-east-2.aws.neon.tech/GESDI?sslmode=require&channel_binding=require";
+
+// SOBRESCREVE a variável de ambiente
+process.env.DATABASE_URL = DATABASE_URL;
+
 declare global {
   var prisma: PrismaClient | undefined;
 }
 
-// Verifique se já existe uma instância do PrismaClient no globalThis
-// Se não existir, crie uma nova instância
-const prisma = globalThis.prisma || new PrismaClient();
+// Cria o cliente com a URL forçada
+const prisma = globalThis.prisma || new PrismaClient({
+  datasources: {
+    db: {
+      url: DATABASE_URL
+    }
+  }
+});
 
-// Se não estivermos em produção, armazene a instância no globalThis
-// Isso evita a criação de múltiplas instâncias do PrismaClient durante o desenvolvimento
 if (process.env.NODE_ENV !== 'production') {
   globalThis.prisma = prisma;
 }
+
+console.log('✅ Conectado ao banco GESDI:', DATABASE_URL.split('@')[1]?.split('?')[0]);
 
 export default prisma;
