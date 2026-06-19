@@ -1,8 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma'; // 👈 USANDO O PRISMA DO LIB
+import prisma from '@/lib/prisma';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 import { existsSync } from 'fs';
+
+// Função para garantir que as pastas existam
+async function ensureDirectories() {
+  const dirs = [
+    path.join(process.cwd(), 'public/uploads/covers'),
+    path.join(process.cwd(), 'public/uploads/pdfs')
+  ];
+  
+  for (const dir of dirs) {
+    if (!existsSync(dir)) {
+      await mkdir(dir, { recursive: true });
+      console.log(`📁 Pasta criada: ${dir}`);
+    }
+  }
+}
 
 // GET - Buscar todos os livros ativos
 export async function GET(req: NextRequest) {
@@ -25,6 +40,9 @@ export async function GET(req: NextRequest) {
 // POST - Criar um novo livro
 export async function POST(req: NextRequest) {
   try {
+    // Garantir que as pastas existam
+    await ensureDirectories();
+    
     const formData = await req.formData();
     
     const title = formData.get('title') as string;
@@ -32,6 +50,8 @@ export async function POST(req: NextRequest) {
     const description = formData.get('description') as string;
     const linkType = formData.get('linkType') as string;
     const externalLink = formData.get('externalLink') as string;
+    
+    console.log('📝 Dados recebidos:', { title, author, description, linkType, externalLink });
     
     // Validar campos obrigatórios
     if (!title || !author) {
@@ -42,78 +62,88 @@ export async function POST(req: NextRequest) {
     }
     
     // Upload da capa
-    const coverImageFile = formData.get('coverImage') as File;
+    const coverImageFile = formData.get('coverImage') as File | null;
     let coverImageUrl = '';
     
     if (coverImageFile && coverImageFile.size > 0) {
       try {
-        const coverBytes = await coverImageFile.arrayBuffer();
-        const coverBuffer = Buffer.from(coverBytes);
+        console.log('📸 Processando imagem:', coverImageFile.name, 'Tamanho:', coverImageFile.size);
+        
+        // CONVERTER O ARQUIVO PARA BUFFER CORRETAMENTE
+        const arrayBuffer = await coverImageFile.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
         
         const timestamp = Date.now();
         const cleanFileName = coverImageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
         const coverFileName = `cover-${timestamp}-${cleanFileName}`;
         const coverPath = path.join(process.cwd(), 'public/uploads/covers', coverFileName);
         
-        const coverDir = path.join(process.cwd(), 'public/uploads/covers');
-        if (!existsSync(coverDir)) {
-          await mkdir(coverDir, { recursive: true });
-        }
-        
-        await writeFile(coverPath, coverBuffer);
+        // Salvar o arquivo
+        await writeFile(coverPath, buffer);
         coverImageUrl = `/uploads/covers/${coverFileName}`;
+        
+        console.log('✅ Capa salva em:', coverPath);
+        console.log('✅ URL da capa:', coverImageUrl);
       } catch (error) {
-        console.error('Erro ao salvar capa:', error);
+        console.error('❌ Erro detalhado ao salvar capa:', error);
         return NextResponse.json(
-          { success: false, error: 'Erro ao salvar a imagem da capa' },
+          { 
+            success: false, 
+            error: 'Erro ao salvar a imagem da capa: ' + (error as Error).message 
+          },
           { status: 500 }
         );
       }
     }
     
     // Upload do PDF (apenas se linkType for READ)
-    const pdfFile = formData.get('fileUrl') as File;
+    const pdfFile = formData.get('fileUrl') as File | null;
     let pdfUrl = '';
     
     if (pdfFile && pdfFile.size > 0 && linkType === 'READ') {
       try {
-        const pdfBytes = await pdfFile.arrayBuffer();
-        const pdfBuffer = Buffer.from(pdfBytes);
+        console.log('📄 Processando PDF:', pdfFile.name, 'Tamanho:', pdfFile.size);
+        
+        const arrayBuffer = await pdfFile.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
         
         const timestamp = Date.now();
         const cleanFileName = pdfFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
         const pdfFileName = `pdf-${timestamp}-${cleanFileName}`;
         const pdfPath = path.join(process.cwd(), 'public/uploads/pdfs', pdfFileName);
         
-        const pdfDir = path.join(process.cwd(), 'public/uploads/pdfs');
-        if (!existsSync(pdfDir)) {
-          await mkdir(pdfDir, { recursive: true });
-        }
-        
-        await writeFile(pdfPath, pdfBuffer);
+        await writeFile(pdfPath, buffer);
         pdfUrl = `/uploads/pdfs/${pdfFileName}`;
+        
+        console.log('✅ PDF salvo em:', pdfPath);
       } catch (error) {
-        console.error('Erro ao salvar PDF:', error);
+        console.error('❌ Erro ao salvar PDF:', error);
         return NextResponse.json(
-          { success: false, error: 'Erro ao salvar o arquivo PDF' },
+          { success: false, error: 'Erro ao salvar o arquivo PDF: ' + (error as Error).message },
           { status: 500 }
         );
       }
     }
 
     // Criar o livro no banco de dados
+    const bookData = {
+      title,
+      author,
+      description: description || null,
+      coverImage: coverImageUrl || '',
+      fileUrl: pdfUrl || '',
+      linkType: linkType as any || 'BUY',
+      externalLink: externalLink || null,
+      isActive: true
+    };
+    
+    console.log('📚 Dados do livro:', bookData);
+    
     const book = await prisma.book.create({
-      data: {
-        title,
-        author,
-        description: description || null,
-        coverImage: coverImageUrl || '/images/default-cover.jpg',
-        fileUrl: pdfUrl || '',
-        linkType: linkType as any || 'BUY',
-        externalLink: externalLink || null,
-        isActive: true
-      }
+      data: bookData
     });
+    
+    console.log('✅ Livro criado com sucesso:', book.id);
     
     return NextResponse.json({ 
       success: true, 
@@ -121,7 +151,7 @@ export async function POST(req: NextRequest) {
       book 
     });
   } catch (error) {
-    console.error('Erro ao criar livro:', error);
+    console.error('❌ Erro ao criar livro:', error);
     return NextResponse.json(
       { 
         success: false, 
@@ -135,6 +165,8 @@ export async function POST(req: NextRequest) {
 // PUT - Atualizar um livro existente
 export async function PUT(req: NextRequest) {
   try {
+    await ensureDirectories();
+    
     const formData = await req.formData();
     const id = formData.get('id') as string;
     
@@ -145,7 +177,6 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    // Verificar se o livro existe
     const existingBook = await prisma.book.findUnique({
       where: { id }
     });
@@ -164,26 +195,21 @@ export async function PUT(req: NextRequest) {
     const externalLink = formData.get('externalLink') as string;
     const isActive = formData.get('isActive') === 'true';
 
-    // Upload da capa (se um novo arquivo for fornecido)
-    const coverImageFile = formData.get('coverImage') as File;
+    // Upload da capa
+    const coverImageFile = formData.get('coverImage') as File | null;
     let coverImageUrl = existingBook.coverImage;
     
     if (coverImageFile && coverImageFile.size > 0) {
       try {
-        const coverBytes = await coverImageFile.arrayBuffer();
-        const coverBuffer = Buffer.from(coverBytes);
+        const arrayBuffer = await coverImageFile.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
         
         const timestamp = Date.now();
         const cleanFileName = coverImageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
         const coverFileName = `cover-${timestamp}-${cleanFileName}`;
         const coverPath = path.join(process.cwd(), 'public/uploads/covers', coverFileName);
         
-        const coverDir = path.join(process.cwd(), 'public/uploads/covers');
-        if (!existsSync(coverDir)) {
-          await mkdir(coverDir, { recursive: true });
-        }
-        
-        await writeFile(coverPath, coverBuffer);
+        await writeFile(coverPath, buffer);
         coverImageUrl = `/uploads/covers/${coverFileName}`;
       } catch (error) {
         console.error('Erro ao salvar capa:', error);
@@ -194,26 +220,21 @@ export async function PUT(req: NextRequest) {
       }
     }
 
-    // Upload do PDF (se um novo arquivo for fornecido)
-    const pdfFile = formData.get('fileUrl') as File;
+    // Upload do PDF
+    const pdfFile = formData.get('fileUrl') as File | null;
     let pdfUrl = existingBook.fileUrl;
     
     if (pdfFile && pdfFile.size > 0 && linkType === 'READ') {
       try {
-        const pdfBytes = await pdfFile.arrayBuffer();
-        const pdfBuffer = Buffer.from(pdfBytes);
+        const arrayBuffer = await pdfFile.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
         
         const timestamp = Date.now();
         const cleanFileName = pdfFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
         const pdfFileName = `pdf-${timestamp}-${cleanFileName}`;
         const pdfPath = path.join(process.cwd(), 'public/uploads/pdfs', pdfFileName);
         
-        const pdfDir = path.join(process.cwd(), 'public/uploads/pdfs');
-        if (!existsSync(pdfDir)) {
-          await mkdir(pdfDir, { recursive: true });
-        }
-        
-        await writeFile(pdfPath, pdfBuffer);
+        await writeFile(pdfPath, buffer);
         pdfUrl = `/uploads/pdfs/${pdfFileName}`;
       } catch (error) {
         console.error('Erro ao salvar PDF:', error);
@@ -224,7 +245,6 @@ export async function PUT(req: NextRequest) {
       }
     }
 
-    // Atualizar o livro
     const book = await prisma.book.update({
       where: { id },
       data: {
@@ -267,7 +287,6 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    // Verificar se o livro existe
     const existingBook = await prisma.book.findUnique({
       where: { id }
     });
@@ -279,7 +298,6 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    // Soft delete (apenas desativar)
     await prisma.book.update({
       where: { id },
       data: { isActive: false }
