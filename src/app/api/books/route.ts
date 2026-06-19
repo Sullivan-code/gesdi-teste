@@ -1,21 +1,111 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
-import { existsSync } from 'fs';
+import { UTApi } from 'uploadthing/server';
 
-// Função para garantir que as pastas existam
-async function ensureDirectories() {
-  const dirs = [
-    path.join(process.cwd(), 'public/uploads/covers'),
-    path.join(process.cwd(), 'public/uploads/pdfs')
-  ];
-  
-  for (const dir of dirs) {
-    if (!existsSync(dir)) {
-      await mkdir(dir, { recursive: true });
-      console.log(`📁 Pasta criada: ${dir}`);
+// Criar instância do UTApi
+const utapi = new UTApi();
+
+// POST - Criar um novo livro
+export async function POST(req: NextRequest) {
+  try {
+    const formData = await req.formData();
+    
+    const title = formData.get('title') as string;
+    const author = formData.get('author') as string;
+    const description = formData.get('description') as string;
+    const linkType = formData.get('linkType') as string;
+    const externalLink = formData.get('externalLink') as string;
+    
+    if (!title || !author) {
+      return NextResponse.json(
+        { success: false, error: 'Título e autor são obrigatórios' },
+        { status: 400 }
+      );
     }
+    
+    let coverImageUrl = '';
+    const coverImageFile = formData.get('coverImage') as File;
+    
+    // Upload da capa para o Uploadthing
+    if (coverImageFile && coverImageFile.size > 0) {
+      try {
+        const fileBuffer = Buffer.from(await coverImageFile.arrayBuffer());
+        
+        // Upload usando o UTApi
+        const uploadResult = await utapi.uploadFiles(
+          new File([fileBuffer], `cover-${Date.now()}-${coverImageFile.name}`, {
+            type: coverImageFile.type,
+          })
+        );
+        
+        if (uploadResult.data && uploadResult.data.url) {
+          coverImageUrl = uploadResult.data.url;
+          console.log('✅ Capa enviada para Uploadthing:', coverImageUrl);
+        }
+      } catch (error) {
+        console.error('Erro no upload da capa:', error);
+        return NextResponse.json(
+          { success: false, error: 'Erro ao fazer upload da imagem: ' + (error as Error).message },
+          { status: 500 }
+        );
+      }
+    }
+    
+    let pdfUrl = '';
+    const pdfFile = formData.get('fileUrl') as File;
+    
+    // Upload do PDF para o Uploadthing
+    if (pdfFile && pdfFile.size > 0 && linkType === 'READ') {
+      try {
+        const fileBuffer = Buffer.from(await pdfFile.arrayBuffer());
+        
+        const uploadResult = await utapi.uploadFiles(
+          new File([fileBuffer], `pdf-${Date.now()}-${pdfFile.name}`, {
+            type: pdfFile.type,
+          })
+        );
+        
+        if (uploadResult.data && uploadResult.data.url) {
+          pdfUrl = uploadResult.data.url;
+          console.log('✅ PDF enviado para Uploadthing:', pdfUrl);
+        }
+      } catch (error) {
+        console.error('Erro no upload do PDF:', error);
+        return NextResponse.json(
+          { success: false, error: 'Erro ao fazer upload do PDF: ' + (error as Error).message },
+          { status: 500 }
+        );
+      }
+    }
+
+    // Criar o livro no banco de dados
+    const book = await prisma.book.create({
+      data: {
+        title,
+        author,
+        description: description || null,
+        coverImage: coverImageUrl || '',
+        fileUrl: pdfUrl || '',
+        linkType: linkType as any || 'BUY',
+        externalLink: externalLink || null,
+        isActive: true
+      }
+    });
+    
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Livro adicionado com sucesso!',
+      book 
+    });
+  } catch (error) {
+    console.error('Erro ao criar livro:', error);
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Erro ao criar livro: ' + (error as Error).message 
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -37,136 +127,9 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST - Criar um novo livro
-export async function POST(req: NextRequest) {
-  try {
-    // Garantir que as pastas existam
-    await ensureDirectories();
-    
-    const formData = await req.formData();
-    
-    const title = formData.get('title') as string;
-    const author = formData.get('author') as string;
-    const description = formData.get('description') as string;
-    const linkType = formData.get('linkType') as string;
-    const externalLink = formData.get('externalLink') as string;
-    
-    console.log('📝 Dados recebidos:', { title, author, description, linkType, externalLink });
-    
-    // Validar campos obrigatórios
-    if (!title || !author) {
-      return NextResponse.json(
-        { success: false, error: 'Título e autor são obrigatórios' },
-        { status: 400 }
-      );
-    }
-    
-    // Upload da capa
-    const coverImageFile = formData.get('coverImage') as File | null;
-    let coverImageUrl = '';
-    
-    if (coverImageFile && coverImageFile.size > 0) {
-      try {
-        console.log('📸 Processando imagem:', coverImageFile.name, 'Tamanho:', coverImageFile.size);
-        
-        // CONVERTER O ARQUIVO PARA BUFFER CORRETAMENTE
-        const arrayBuffer = await coverImageFile.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-        
-        const timestamp = Date.now();
-        const cleanFileName = coverImageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const coverFileName = `cover-${timestamp}-${cleanFileName}`;
-        const coverPath = path.join(process.cwd(), 'public/uploads/covers', coverFileName);
-        
-        // Salvar o arquivo
-        await writeFile(coverPath, buffer);
-        coverImageUrl = `/uploads/covers/${coverFileName}`;
-        
-        console.log('✅ Capa salva em:', coverPath);
-        console.log('✅ URL da capa:', coverImageUrl);
-      } catch (error) {
-        console.error('❌ Erro detalhado ao salvar capa:', error);
-        return NextResponse.json(
-          { 
-            success: false, 
-            error: 'Erro ao salvar a imagem da capa: ' + (error as Error).message 
-          },
-          { status: 500 }
-        );
-      }
-    }
-    
-    // Upload do PDF (apenas se linkType for READ)
-    const pdfFile = formData.get('fileUrl') as File | null;
-    let pdfUrl = '';
-    
-    if (pdfFile && pdfFile.size > 0 && linkType === 'READ') {
-      try {
-        console.log('📄 Processando PDF:', pdfFile.name, 'Tamanho:', pdfFile.size);
-        
-        const arrayBuffer = await pdfFile.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-        
-        const timestamp = Date.now();
-        const cleanFileName = pdfFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const pdfFileName = `pdf-${timestamp}-${cleanFileName}`;
-        const pdfPath = path.join(process.cwd(), 'public/uploads/pdfs', pdfFileName);
-        
-        await writeFile(pdfPath, buffer);
-        pdfUrl = `/uploads/pdfs/${pdfFileName}`;
-        
-        console.log('✅ PDF salvo em:', pdfPath);
-      } catch (error) {
-        console.error('❌ Erro ao salvar PDF:', error);
-        return NextResponse.json(
-          { success: false, error: 'Erro ao salvar o arquivo PDF: ' + (error as Error).message },
-          { status: 500 }
-        );
-      }
-    }
-
-    // Criar o livro no banco de dados
-    const bookData = {
-      title,
-      author,
-      description: description || null,
-      coverImage: coverImageUrl || '',
-      fileUrl: pdfUrl || '',
-      linkType: linkType as any || 'BUY',
-      externalLink: externalLink || null,
-      isActive: true
-    };
-    
-    console.log('📚 Dados do livro:', bookData);
-    
-    const book = await prisma.book.create({
-      data: bookData
-    });
-    
-    console.log('✅ Livro criado com sucesso:', book.id);
-    
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Livro adicionado com sucesso!',
-      book 
-    });
-  } catch (error) {
-    console.error('❌ Erro ao criar livro:', error);
-    return NextResponse.json(
-      { 
-        success: false, 
-        error: 'Erro ao criar livro: ' + (error as Error).message 
-      },
-      { status: 500 }
-    );
-  }
-}
-
 // PUT - Atualizar um livro existente
 export async function PUT(req: NextRequest) {
   try {
-    await ensureDirectories();
-    
     const formData = await req.formData();
     const id = formData.get('id') as string;
     
@@ -195,51 +158,49 @@ export async function PUT(req: NextRequest) {
     const externalLink = formData.get('externalLink') as string;
     const isActive = formData.get('isActive') === 'true';
 
-    // Upload da capa
-    const coverImageFile = formData.get('coverImage') as File | null;
     let coverImageUrl = existingBook.coverImage;
+    const coverImageFile = formData.get('coverImage') as File;
     
     if (coverImageFile && coverImageFile.size > 0) {
       try {
-        const arrayBuffer = await coverImageFile.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
+        const fileBuffer = Buffer.from(await coverImageFile.arrayBuffer());
+        const uploadResult = await utapi.uploadFiles(
+          new File([fileBuffer], `cover-${Date.now()}-${coverImageFile.name}`, {
+            type: coverImageFile.type,
+          })
+        );
         
-        const timestamp = Date.now();
-        const cleanFileName = coverImageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const coverFileName = `cover-${timestamp}-${cleanFileName}`;
-        const coverPath = path.join(process.cwd(), 'public/uploads/covers', coverFileName);
-        
-        await writeFile(coverPath, buffer);
-        coverImageUrl = `/uploads/covers/${coverFileName}`;
+        if (uploadResult.data && uploadResult.data.url) {
+          coverImageUrl = uploadResult.data.url;
+        }
       } catch (error) {
-        console.error('Erro ao salvar capa:', error);
+        console.error('Erro no upload da capa:', error);
         return NextResponse.json(
-          { success: false, error: 'Erro ao salvar a imagem da capa' },
+          { success: false, error: 'Erro ao fazer upload da imagem' },
           { status: 500 }
         );
       }
     }
 
-    // Upload do PDF
-    const pdfFile = formData.get('fileUrl') as File | null;
     let pdfUrl = existingBook.fileUrl;
+    const pdfFile = formData.get('fileUrl') as File;
     
     if (pdfFile && pdfFile.size > 0 && linkType === 'READ') {
       try {
-        const arrayBuffer = await pdfFile.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
+        const fileBuffer = Buffer.from(await pdfFile.arrayBuffer());
+        const uploadResult = await utapi.uploadFiles(
+          new File([fileBuffer], `pdf-${Date.now()}-${pdfFile.name}`, {
+            type: pdfFile.type,
+          })
+        );
         
-        const timestamp = Date.now();
-        const cleanFileName = pdfFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const pdfFileName = `pdf-${timestamp}-${cleanFileName}`;
-        const pdfPath = path.join(process.cwd(), 'public/uploads/pdfs', pdfFileName);
-        
-        await writeFile(pdfPath, buffer);
-        pdfUrl = `/uploads/pdfs/${pdfFileName}`;
+        if (uploadResult.data && uploadResult.data.url) {
+          pdfUrl = uploadResult.data.url;
+        }
       } catch (error) {
-        console.error('Erro ao salvar PDF:', error);
+        console.error('Erro no upload do PDF:', error);
         return NextResponse.json(
-          { success: false, error: 'Erro ao salvar o arquivo PDF' },
+          { success: false, error: 'Erro ao fazer upload do PDF' },
           { status: 500 }
         );
       }
