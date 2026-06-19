@@ -27,7 +27,7 @@ const Biblioteca: React.FC = () => {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false); // Estado para controlar se é admin
+  const [isAdmin, setIsAdmin] = useState(false);
   
   // Form states
   const [showForm, setShowForm] = useState(false);
@@ -55,6 +55,7 @@ const Biblioteca: React.FC = () => {
     externalLink: '',
     coverImage: null as File | null,
     fileUrl: null as File | null,
+    isActive: true,
   });
   const [editLoading, setEditLoading] = useState(false);
   const [editError, setEditError] = useState('');
@@ -129,6 +130,7 @@ const Biblioteca: React.FC = () => {
       externalLink: book.externalLink || '',
       coverImage: null,
       fileUrl: null,
+      isActive: book.isActive !== undefined ? book.isActive : true,
     });
     setShowEditModal(true);
     setEditError('');
@@ -147,6 +149,7 @@ const Biblioteca: React.FC = () => {
       externalLink: '',
       coverImage: null,
       fileUrl: null,
+      isActive: true,
     });
     setEditError('');
     setEditSuccess('');
@@ -154,8 +157,13 @@ const Biblioteca: React.FC = () => {
 
   // Handle edit form changes
   const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setEditFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type } = e.target;
+    if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked;
+      setEditFormData(prev => ({ ...prev, [name]: checked }));
+    } else {
+      setEditFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   // Handle edit file changes
@@ -183,6 +191,7 @@ const Biblioteca: React.FC = () => {
       formDataToSend.append('description', editFormData.description);
       formDataToSend.append('linkType', editFormData.linkType);
       formDataToSend.append('externalLink', editFormData.externalLink);
+      formDataToSend.append('isActive', String(editFormData.isActive));
       
       if (editFormData.coverImage) {
         formDataToSend.append('coverImage', editFormData.coverImage);
@@ -259,7 +268,7 @@ const Biblioteca: React.FC = () => {
       setShowPasswordModal(false);
       setPassword('');
       setPasswordError('');
-      setIsAdmin(true); // Define como admin após senha correta
+      setIsAdmin(true);
       setShowForm(true);
       setTimeout(() => {
         document.getElementById('book-form')?.scrollIntoView({ behavior: 'smooth' });
@@ -386,12 +395,13 @@ const Biblioteca: React.FC = () => {
 
   return (
     <div className="container mx-auto p-6 relative">
-      {/* Cabeçalho */}
+      {/* Cabeçalho com título e botão + */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-purple-900">
           📚 Biblioteca Virtual
         </h1>
         
+        {/* Botão de + protegido por senha */}
         <button
           onClick={handleAdminAccess}
           className="bg-purple-700 hover:bg-purple-800 text-white p-3 rounded-full transition-all duration-300 transform hover:scale-110 shadow-lg flex items-center justify-center"
@@ -583,6 +593,19 @@ const Biblioteca: React.FC = () => {
                     <span className="text-gray-400">Sem imagem</span>
                   </div>
                 )}
+                
+                {/* Badge de status - só para admin */}
+                {isAdmin && (
+                  <div className="absolute top-2 right-2">
+                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                      book.isActive 
+                        ? 'bg-green-500 text-white' 
+                        : 'bg-red-500 text-white'
+                    }`}>
+                      {book.isActive ? '📢 Publicado' : '⛔ Não Publicado'}
+                    </span>
+                  </div>
+                )}
               </div>
               
               {/* Conteúdo */}
@@ -599,7 +622,7 @@ const Biblioteca: React.FC = () => {
                   </p>
                 )}
                 
-                {/* Botões de ação */}
+                {/* Botão ACESSAR - VISÍVEL PARA TODOS */}
                 <div className="flex gap-2">
                   {book.linkType === 'READ' && book.fileUrl && (
                     <a
@@ -608,7 +631,7 @@ const Biblioteca: React.FC = () => {
                       rel="noopener noreferrer"
                       className="flex-1 text-center px-4 py-2 rounded-lg font-semibold transition duration-200 bg-blue-600 hover:bg-blue-700 text-white text-sm"
                     >
-                      📖 Ler
+                      📖 Ler Agora
                     </a>
                   )}
                   {book.linkType === 'BUY' && book.externalLink && (
@@ -631,8 +654,13 @@ const Biblioteca: React.FC = () => {
                       🔗 Acessar
                     </a>
                   )}
+                  {(!book.fileUrl && !book.externalLink) && (
+                    <span className="flex-1 text-center px-4 py-2 rounded-lg font-semibold bg-gray-400 text-white text-sm cursor-not-allowed">
+                      Indisponível
+                    </span>
+                  )}
                   
-                  {/* Botões de editar e deletar - só aparecem se for admin */}
+                  {/* Botões de editar e deletar - SÓ APARECEM SE FOR ADMIN */}
                   {isAdmin && (
                     <>
                       <button
@@ -790,6 +818,21 @@ const Biblioteca: React.FC = () => {
                       <p className="text-xs text-gray-500 mt-1">Deixe em branco para manter o atual</p>
                     </div>
                   )}
+                </div>
+
+                {/* Checkbox para Publicar/Despublicar */}
+                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <input
+                    type="checkbox"
+                    id="isActive"
+                    name="isActive"
+                    checked={editFormData.isActive}
+                    onChange={handleEditChange}
+                    className="w-5 h-5 text-purple-600 rounded focus:ring-purple-500"
+                  />
+                  <label htmlFor="isActive" className="text-sm font-medium text-gray-700">
+                    {editFormData.isActive ? '✅ Livro Publicado' : '⛔ Livro Não Publicado'}
+                  </label>
                 </div>
                 
                 <div className="flex gap-3 pt-2">
