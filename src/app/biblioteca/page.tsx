@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Lock, X } from 'lucide-react';
+import { Plus, Lock, X, Pencil, Trash2, Save } from 'lucide-react';
 
 interface Book {
   id: string;
@@ -27,6 +27,7 @@ const Biblioteca: React.FC = () => {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false); // Estado para controlar se é admin
   
   // Form states
   const [showForm, setShowForm] = useState(false);
@@ -42,6 +43,22 @@ const Biblioteca: React.FC = () => {
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState('');
   const [formSuccess, setFormSuccess] = useState('');
+
+  // Edit states
+  const [editingBook, setEditingBook] = useState<Book | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    title: '',
+    author: '',
+    description: '',
+    linkType: 'BUY' as 'BUY' | 'READ' | 'EXTERNAL',
+    externalLink: '',
+    coverImage: null as File | null,
+    fileUrl: null as File | null,
+  });
+  const [editLoading, setEditLoading] = useState(false);
+  const [editError, setEditError] = useState('');
+  const [editSuccess, setEditSuccess] = useState('');
 
   useEffect(() => {
     fetchBooks();
@@ -101,6 +118,135 @@ const Biblioteca: React.FC = () => {
     }
   };
 
+  // Abrir modal de edição
+  const handleEditBook = (book: Book) => {
+    setEditingBook(book);
+    setEditFormData({
+      title: book.title,
+      author: book.author,
+      description: book.description || '',
+      linkType: book.linkType,
+      externalLink: book.externalLink || '',
+      coverImage: null,
+      fileUrl: null,
+    });
+    setShowEditModal(true);
+    setEditError('');
+    setEditSuccess('');
+  };
+
+  // Fechar modal de edição
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setEditingBook(null);
+    setEditFormData({
+      title: '',
+      author: '',
+      description: '',
+      linkType: 'BUY',
+      externalLink: '',
+      coverImage: null,
+      fileUrl: null,
+    });
+    setEditError('');
+    setEditSuccess('');
+  };
+
+  // Handle edit form changes
+  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // Handle edit file changes
+  const handleEditFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, files } = e.target;
+    if (files && files[0]) {
+      setEditFormData(prev => ({ ...prev, [name]: files[0] }));
+    }
+  };
+
+  // Salvar edição
+  const handleSaveEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingBook) return;
+
+    setEditLoading(true);
+    setEditError('');
+    setEditSuccess('');
+
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('id', editingBook.id);
+      formDataToSend.append('title', editFormData.title);
+      formDataToSend.append('author', editFormData.author);
+      formDataToSend.append('description', editFormData.description);
+      formDataToSend.append('linkType', editFormData.linkType);
+      formDataToSend.append('externalLink', editFormData.externalLink);
+      
+      if (editFormData.coverImage) {
+        formDataToSend.append('coverImage', editFormData.coverImage);
+      }
+      
+      if (editFormData.fileUrl && editFormData.linkType === 'READ') {
+        formDataToSend.append('fileUrl', editFormData.fileUrl);
+      }
+
+      const response = await fetch('/api/books', {
+        method: 'PUT',
+        body: formDataToSend,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Erro ao atualizar livro');
+      }
+
+      setEditSuccess('✅ Livro atualizado com sucesso!');
+      
+      await fetchBooks();
+      
+      setTimeout(() => {
+        handleCloseEditModal();
+      }, 1500);
+      
+    } catch (err) {
+      console.error('Erro ao atualizar livro:', err);
+      setEditError(err instanceof Error ? err.message : 'Erro ao atualizar livro');
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
+  // Deletar livro
+  const handleDeleteBook = async (bookId: string) => {
+    if (!confirm('Tem certeza que deseja deletar este livro?')) return;
+
+    try {
+      const response = await fetch(`/api/books?id=${bookId}`, {
+        method: 'DELETE',
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Erro ao deletar livro');
+      }
+
+      setFormSuccess('✅ Livro deletado com sucesso!');
+      
+      await fetchBooks();
+      
+      setTimeout(() => setFormSuccess(''), 3000);
+      
+    } catch (err) {
+      console.error('Erro ao deletar livro:', err);
+      setFormError(err instanceof Error ? err.message : 'Erro ao deletar livro');
+      setTimeout(() => setFormError(''), 3000);
+    }
+  };
+
   const handleAdminAccess = () => {
     setShowPasswordModal(true);
     setPassword('');
@@ -113,8 +259,8 @@ const Biblioteca: React.FC = () => {
       setShowPasswordModal(false);
       setPassword('');
       setPasswordError('');
+      setIsAdmin(true); // Define como admin após senha correta
       setShowForm(true);
-      // Scroll to form
       setTimeout(() => {
         document.getElementById('book-form')?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
@@ -185,10 +331,8 @@ const Biblioteca: React.FC = () => {
         fileUrl: null,
       });
       
-      // Refresh books list
       await fetchBooks();
       
-      // Reset file inputs
       const fileInputs = document.querySelectorAll('input[type="file"]');
       fileInputs.forEach(input => (input as HTMLInputElement).value = '');
       
@@ -242,13 +386,12 @@ const Biblioteca: React.FC = () => {
 
   return (
     <div className="container mx-auto p-6 relative">
-      {/* Cabeçalho com título e botão + */}
+      {/* Cabeçalho */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-purple-900">
           📚 Biblioteca Virtual
         </h1>
         
-        {/* Botão de + protegido por senha */}
         <button
           onClick={handleAdminAccess}
           className="bg-purple-700 hover:bg-purple-800 text-white p-3 rounded-full transition-all duration-300 transform hover:scale-110 shadow-lg flex items-center justify-center"
@@ -258,8 +401,8 @@ const Biblioteca: React.FC = () => {
         </button>
       </div>
 
-      {/* Formulário para adicionar livro */}
-      {showForm && (
+      {/* Formulário para adicionar livro - só aparece se for admin */}
+      {showForm && isAdmin && (
         <div id="book-form" className="mb-10 bg-white rounded-lg shadow-lg p-6 border-2 border-purple-200 relative">
           <button
             onClick={closeForm}
@@ -456,45 +599,219 @@ const Biblioteca: React.FC = () => {
                   </p>
                 )}
                 
-                {/* Botão de ação */}
-                {book.linkType === 'READ' && book.fileUrl && (
-                  <a
-                    href={book.fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block w-full text-center px-4 py-2 rounded-lg font-semibold transition duration-200 bg-blue-600 hover:bg-blue-700 text-white"
-                  >
-                    📖 Ler Agora
-                  </a>
-                )}
-                {book.linkType === 'BUY' && book.externalLink && (
-                  <a
-                    href={book.externalLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block w-full text-center px-4 py-2 rounded-lg font-semibold transition duration-200 bg-green-600 hover:bg-green-700 text-white"
-                  >
-                    💰 Comprar
-                  </a>
-                )}
-                {book.linkType === 'EXTERNAL' && book.externalLink && (
-                  <a
-                    href={book.externalLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block w-full text-center px-4 py-2 rounded-lg font-semibold transition duration-200 bg-purple-600 hover:bg-purple-700 text-white"
-                  >
-                    🔗 Acessar
-                  </a>
-                )}
-                {(!book.fileUrl && !book.externalLink) && (
-                  <span className="inline-block w-full text-center px-4 py-2 rounded-lg font-semibold bg-gray-400 text-white cursor-not-allowed">
-                    Indisponível
-                  </span>
-                )}
+                {/* Botões de ação */}
+                <div className="flex gap-2">
+                  {book.linkType === 'READ' && book.fileUrl && (
+                    <a
+                      href={book.fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 text-center px-4 py-2 rounded-lg font-semibold transition duration-200 bg-blue-600 hover:bg-blue-700 text-white text-sm"
+                    >
+                      📖 Ler
+                    </a>
+                  )}
+                  {book.linkType === 'BUY' && book.externalLink && (
+                    <a
+                      href={book.externalLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 text-center px-4 py-2 rounded-lg font-semibold transition duration-200 bg-green-600 hover:bg-green-700 text-white text-sm"
+                    >
+                      💰 Comprar
+                    </a>
+                  )}
+                  {book.linkType === 'EXTERNAL' && book.externalLink && (
+                    <a
+                      href={book.externalLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 text-center px-4 py-2 rounded-lg font-semibold transition duration-200 bg-purple-600 hover:bg-purple-700 text-white text-sm"
+                    >
+                      🔗 Acessar
+                    </a>
+                  )}
+                  
+                  {/* Botões de editar e deletar - só aparecem se for admin */}
+                  {isAdmin && (
+                    <>
+                      <button
+                        onClick={() => handleEditBook(book)}
+                        className="px-3 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition duration-200"
+                        title="Editar livro"
+                      >
+                        <Pencil size={18} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteBook(book.id)}
+                        className="px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition duration-200"
+                        title="Deletar livro"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Modal de Edição - só aparece se for admin */}
+      {showEditModal && editingBook && isAdmin && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all animate-slideIn">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold text-purple-800">✏️ Editar Livro</h2>
+                <button
+                  onClick={handleCloseEditModal}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+              
+              {editSuccess && (
+                <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg">
+                  {editSuccess}
+                </div>
+              )}
+              
+              {editError && (
+                <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+                  ❌ {editError}
+                </div>
+              )}
+              
+              <form onSubmit={handleSaveEdit} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Título do Livro *
+                    </label>
+                    <input
+                      type="text"
+                      name="title"
+                      value={editFormData.title}
+                      onChange={handleEditChange}
+                      required
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Autor(a) *
+                    </label>
+                    <input
+                      type="text"
+                      name="author"
+                      value={editFormData.author}
+                      onChange={handleEditChange}
+                      required
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Descrição
+                  </label>
+                  <textarea
+                    name="description"
+                    value={editFormData.description}
+                    onChange={handleEditChange}
+                    rows={3}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Tipo de Link *
+                    </label>
+                    <select
+                      name="linkType"
+                      value={editFormData.linkType}
+                      onChange={handleEditChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                    >
+                      <option value="BUY">💰 Comprar</option>
+                      <option value="READ">📖 Ler</option>
+                      <option value="EXTERNAL">🔗 Externo</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Link Externo
+                    </label>
+                    <input
+                      type="url"
+                      name="externalLink"
+                      value={editFormData.externalLink}
+                      onChange={handleEditChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                    />
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Nova Capa (opcional)
+                    </label>
+                    <input
+                      type="file"
+                      name="coverImage"
+                      onChange={handleEditFileChange}
+                      accept="image/*"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Deixe em branco para manter a atual</p>
+                  </div>
+                  
+                  {editFormData.linkType === 'READ' && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Novo PDF (opcional)
+                      </label>
+                      <input
+                        type="file"
+                        name="fileUrl"
+                        onChange={handleEditFileChange}
+                        accept=".pdf"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Deixe em branco para manter o atual</p>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="flex gap-3 pt-2">
+                  <button
+                    type="submit"
+                    disabled={editLoading}
+                    className="flex-1 px-6 py-2 bg-purple-700 hover:bg-purple-800 text-white font-bold rounded-lg transition duration-200 disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    <Save size={18} />
+                    {editLoading ? 'Salvando...' : '💾 Salvar Alterações'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCloseEditModal}
+                    className="flex-1 px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition duration-200"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       )}
 
@@ -509,7 +826,7 @@ const Biblioteca: React.FC = () => {
                 </div>
                 <h2 className="text-2xl font-bold text-purple-900">🔒 Acesso Restrito</h2>
                 <p className="text-gray-600 mt-2">
-                  Digite a senha para adicionar um novo livro
+                  Digite a senha para acessar as funções administrativas
                 </p>
               </div>
               
